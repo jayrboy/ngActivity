@@ -1,0 +1,58 @@
+<!-- Header -->
+<header class="font-bold mt-5 mx-auto max-w-7xl px-8 grid md:grid-cols-1">
+  <h1 class="text-3xl text-black pb-4">Project Working with Tailwind CSS</h1>
+  <hr />
+  <p class="text-xl flex items-center">โครงการ 2024</p>
+</header>
+
+<!-- Add Product -->
+<div class="text-center mx-3 text-sm">
+  <button class="bg-blue-500 hover:bg-blue-600 text-white p-1 rounded">
+    <span class="flex items-center justify-center">
+      <mat-icon>
+        <span class="material-symbols-outlined">
+          add_circle
+        </span>
+      </mat-icon>
+      &nbsp;Add Product
+    </span>
+  </button>
+</div>
+
+<!-- Table -->
+<div class="overflow-x-auto mt-5">
+  <table
+    class="text-center mx-auto w-full sm:max-w-4xl bg-white shadow-sm rounded overflow-hidden caption-bottom divide-y divide-gray-200">
+    <thead class="bg-gray-200 text-gray-700">
+      <tr>
+
+        <th class="px-2 py-1">เลือก</th>
+        <th class="px-2 py-1">ID</th>
+        <th class="px-2 py-1">Name</th>
+        <th class="px-2 py-1">Start</th>
+        <th class="px-2 py-1">End</th>
+        <th class="px-2 py-1">Action</th>
+
+      </tr>
+    </thead>
+    <tbody class="text-gray-600 divide-y divide-gray-200">
+      <tr *ngFor="let p of AllProjects" class="hover:bg-gray-100">
+        <td class="px-2 py-1">
+          <div class="flex justify-center items-center">
+            <input type="radio" name="id"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600">
+          </div>
+        </td>
+        <td class="px-2 py-1">{{ p.id }}</td>
+        <td class="px-2 py-1">{{ p.name}}</td>
+        <td class="px-2 py-1">{{ p.startDate}}</td>
+        <td class="px-2 py-1">{{ p.endDate}}</td>
+        <td class="px-2 py-1 inline-flex rounded shadow-sm">
+          <button class="bg-amber-500 text-sm hover:bg-amber-600 text-white py-1 px-3 mx-0.5 rounded">Manage</button>
+          <button
+            class="bg-rose-500 text-sm hover:bg-rose-600 text-white py-1 px-3 rounded flex"><mat-icon>delete</mat-icon></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

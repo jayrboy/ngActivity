@@ -3,6 +3,7 @@ import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { authGuard } from './route/auth.guard';
+import { ProjectComponent } from './views/project/project.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent, title: 'Home' },
@@ -11,6 +12,12 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     title: 'Dashboard',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'project',
+    component: ProjectComponent,
+    title: 'Project',
     canActivate: [authGuard],
   },
   { path: '**', redirectTo: 'home', title: 'Page Not Found' },
