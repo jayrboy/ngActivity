@@ -1,5 +1,5 @@
 <div class="card-signin">
-  <form (submit)="onSubmitLogin()">
+  <form (submit)="onSubmitLogIn()">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Welcome to Activities</mat-card-title>
@@ -8,12 +8,12 @@
 
       <mat-form-field>
         <mat-label>Enter your username</mat-label>
-        <input [(ngModel)]="account.username" name="username" matInput placeholder="John" required>
+        <input [(ngModel)]="loginForm.username" name="username" matInput placeholder="John" required>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Enter your password</mat-label>
-        <input [(ngModel)]="account.password" name="password" matInput [type]="hide ? 'password' : 'text'" required>
+        <input [(ngModel)]="loginForm.password" name="password" matInput [type]="hide ? 'password' : 'text'" required>
         <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
           [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>

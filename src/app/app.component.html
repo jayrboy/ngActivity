@@ -6,12 +6,15 @@
     </button>
     <span>My App</span>
     <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>favorite</mat-icon>
+    @if(token == null) {
+    <span>Log In</span>
+    <button routerLink="/login" mat-icon-button class="example-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon><span class="material-symbols-outlined">
+          login
+        </span></mat-icon>
     </button>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" routerLink="login">
-      <mat-icon>login</mat-icon>
-    </button>
+    }
+
   </mat-toolbar>
 </nav>
 
@@ -21,11 +24,17 @@
   <mat-drawer #drawer class="example-sidenav" mode="side">
     <p>Auto-resizing sidenav</p>
     @if (showFiller) {
-    <p>Lorem, ipsum dolor sit amet consectetur.</p>
+    <p>Hello World !</p>
     }
     <button (click)="showFiller = !showFiller" mat-raised-button>
-      Toggle extra text
+      Toggle
     </button>
+    <p>&nbsp;</p>
+    @if (token != null) {
+    <button (click)="onClickLogOut()" mat-raised-button color="warn">
+      Log Out
+    </button>
+    }
   </mat-drawer>
 
   <!-- Main content -->

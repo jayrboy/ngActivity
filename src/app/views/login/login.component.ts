@@ -1,10 +1,4 @@
 import { Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-
 import {
   FormControl,
   Validators,
@@ -13,9 +7,17 @@ import {
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
-import { AuthService } from '../../services/auth.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+
 import Login from '../../models/login.model';
 import Response from '../../models/response';
+import { AuthService } from '../../services/auth.service';
+
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -34,28 +36,26 @@ import Response from '../../models/response';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  // Properties
   hide = true;
   username = new FormControl('', [Validators.required]);
-  account = new Login();
+
+  loginForm = new Login();
   token = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  onSubmitLogin() {
-    // console.log(this.account);
-
-    if (this.account.username == '' || this.account.password == '') {
-      return alert('Please Enter a Username and Password');
+  onSubmitLogIn() {
+    if (this.loginForm.username == '' || this.loginForm.password == '') {
+      return alert('User Not found');
     }
 
-    this.authService.login(this.account).subscribe(
+    this.authService.logIn(this.loginForm).subscribe(
       (result: Response) => {
-        // console.log(result.data);
-
         this.token = result.data.token;
-        localStorage.setItem('token', this.token);
+        this.authService.setToken(this.token); // Set the token in the service
+        this.router.navigate(['/dashboard']);
         alert('Login Successfully');
-        this.router.navigate(['/']); // Navigate to /home
       },
       (error) => {
         console.error(error);
