@@ -8,6 +8,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from './services/auth.service';
+import { CommonModule } from '@angular/common';
+
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +24,8 @@ import { AuthService } from './services/auth.service';
     MatIconModule,
     MatSidenavModule,
     MatDividerModule,
+    MatIconModule,
+    CommonModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -30,7 +36,11 @@ export class AppComponent {
   token: string | null = null;
   tokenSubscription = new Subscription();
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.tokenSubscription = this.authService.token$.subscribe(
@@ -47,5 +57,14 @@ export class AppComponent {
   onClickLogOut() {
     this.authService.clearToken();
     this.router.navigate(['/login']);
+  }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string) {
+    this.dialog.open(DialogComponent, {
+      width: '350px',
+      height: '200px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
   }
 }

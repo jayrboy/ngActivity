@@ -31,3 +31,56 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ```bash
 ng add @angular/material
 ```
+
+# Install NPM ToastR
+
+```bash
+npm install ngx-toastr --save
+npm install @angular/animations --save
+```
+
+1. Set up: Add CSS to angular.json
+
+```json
+"styles": [
+  "styles.scss", "node_modules/ngx-toastr/toastr.css"
+]
+```
+
+2. Add "provideAnimations()" and "provideToastr()" to "app.config.ts"
+
+```ts
+import { AppComponent } from "./src/app.component";
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
+
+import { provideToastr } from "ngx-toastr";
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideAnimationsAsync(),
+    provideToastr(), // Toastr providers
+  ],
+};
+```
+
+3. Use
+
+```ts
+//TODO:
+import { ToastrService } from 'ngx-toastr';
+
+@Component({...})
+export class YourComponent {
+  //TODO:
+  constructor(private toastr: ToastrService) { }
+
+  //TODO:
+  showSuccess() {
+    this.toastr.success('Hello world!', 'Toastr fun!');
+  }
+}
+```
+
+## Options
+
+- https://github.com/scttcper/ngx-toastr

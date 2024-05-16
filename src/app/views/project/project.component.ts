@@ -1,26 +1,25 @@
 import { MatIconModule } from '@angular/material/icon';
 import Project from '../../models/project.model';
-import Response from '../../models/response';
+import Response from '../../models/response.model';
 import { ProjectService } from './../../services/project.service';
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [MatIconModule, CommonModule],
+  imports: [MatIconModule],
   templateUrl: './project.component.html',
   styleUrl: './project.component.css',
 })
 export class ProjectComponent {
-  AllProjects: any = new Project();
+  AllProjects: Project[] = [];
 
   constructor(private projectService: ProjectService) {}
 
   ngOnInit(): void {
     this.projectService.getAll().subscribe(
       (result: Response) => {
-        console.log(result);
+        // console.log(result);
         this.AllProjects = result.data;
       },
       (error) => console.error(error)

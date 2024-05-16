@@ -1,10 +1,10 @@
-<nav>
+<nav class="navbar">
   <mat-toolbar color="primary">
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" type="button"
       (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
-    <span>My App</span>
+    <img class="h-8 w-auto" src="../../../assets/angular-icon.png" alt="Your Company">
     <span class="example-spacer"></span>
     @if(token == null) {
     <span>Log In</span>
@@ -22,18 +22,51 @@
 
   <!-- Side -->
   <mat-drawer #drawer class="example-sidenav" mode="side">
-    <p>Auto-resizing sidenav</p>
     @if (showFiller) {
-    <p>Hello World !</p>
+    <h4>Welcome,</h4>
+    <p>Mr.Jakkrit Onsomkrit</p>
     }
-    <button (click)="showFiller = !showFiller" mat-raised-button>
-      Toggle
-    </button>
+    <div class="mb-1">
+      <button (click)="showFiller = !showFiller"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full flex justify-center items-center">
+        <mat-icon class="mr-1"><span class="material-symbols-outlined">
+            account_circle
+          </span></mat-icon>Profile
+      </button>
+    </div>
+
+    <div class="mb-1">
+      <button routerLink="dashboard"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full flex justify-center items-center">
+        <mat-icon class="mr-1"><span class="material-symbols-outlined">
+            dashboard
+          </span></mat-icon>Dashboard
+      </button>
+    </div>
+
+    <div class="mb-1">
+      <button routerLink="project"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full flex justify-center items-center">
+        <mat-icon class="mr-1"><span class="material-symbols-outlined">
+            assignment
+          </span></mat-icon>Projects
+      </button>
+    </div>
+
+    <div class="mb-1">
+      <button routerLink="users"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full flex justify-center items-center">
+        <mat-icon class="mr-1"><span class="material-symbols-outlined">
+            groups
+          </span></mat-icon>Users
+      </button>
+    </div>
+
     <p>&nbsp;</p>
     @if (token != null) {
-    <button (click)="onClickLogOut()" mat-raised-button color="warn">
-      Log Out
-    </button>
+    <div class="flex justify-center">
+      <button mat-raised-button color="warn" (click)="openDialog('0ms', '0ms')">Log Out</button>
+    </div>
     }
   </mat-drawer>
 

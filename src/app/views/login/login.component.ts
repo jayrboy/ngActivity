@@ -14,10 +14,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 
 import Login from '../../models/login.model';
-import Response from '../../models/response';
+import Response from '../../models/response.model';
 import { AuthService } from '../../services/auth.service';
 
 import { Observable } from 'rxjs';
+
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -43,23 +45,27 @@ export class LoginComponent {
   loginForm = new Login();
   token = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
-  onSubmitLogIn() {
+  onSubmitLogIn(): void {
     if (this.loginForm.username == '' || this.loginForm.password == '') {
-      return alert('User Not found');
+      this.toastr.warning('User Not found', 'Please Enter Account');
+    } else {
+      this.authService.logIn(this.loginForm).subscribe(
+        (result: Response) => {
+          this.token = result.data.token;
+          this.authService.setToken(this.token); // Set the token in the service
+          this.router.navigate(['/dashboard']);
+          this.toastr.success('Login Successfully', 'Success');
+        },
+        (error) => {
+          this.toastr.warning('Failed to Account', 'Please Enter Again !');
+        }
+      );
     }
-
-    this.authService.logIn(this.loginForm).subscribe(
-      (result: Response) => {
-        this.token = result.data.token;
-        this.authService.setToken(this.token); // Set the token in the service
-        this.router.navigate(['/dashboard']);
-        alert('Login Successfully');
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
   }
 }
