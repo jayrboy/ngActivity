@@ -10,8 +10,15 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from './services/auth.service';
 import { CommonModule } from '@angular/common';
 
-import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from './components/dialog/dialog.component';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogContent,
+} from '@angular/material/dialog';
+
+import { ToastrService } from 'ngx-toastr';
+
+import Account from './models/account.model';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +31,6 @@ import { DialogComponent } from './components/dialog/dialog.component';
     MatIconModule,
     MatSidenavModule,
     MatDividerModule,
-    MatIconModule,
     CommonModule,
   ],
   templateUrl: './app.component.html',
@@ -35,17 +41,23 @@ export class AppComponent {
   showFiller = false;
   token: string | null = null;
   tokenSubscription = new Subscription();
+  username = '';
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private accountService: AuthService
   ) {}
 
   ngOnInit() {
     this.tokenSubscription = this.authService.token$.subscribe(
       (token) => (this.token = token)
     );
+
+    // this.accountService
+    //   .getUsername()
+    //   .subscribe((result) => console.log(result));
   }
 
   ngOnDestroy() {
@@ -66,5 +78,59 @@ export class AppComponent {
       enterAnimationDuration,
       exitAnimationDuration,
     });
+  }
+}
+
+// Dialog "Log Out" Component
+@Component({
+  selector: 'app-dialog',
+  standalone: true,
+  imports: [MatButtonModule, MatDialogActions, MatDialogContent],
+  template: `
+    <div class="p-3">
+      <h1 mat-dialog-title class="text-center">Log Out</h1>
+
+      <mat-dialog-content class="text-center">
+        ต้องการออกจากระบบหรือไม่?
+      </mat-dialog-content>
+    </div>
+
+    <mat-dialog-actions align="center">
+      <button
+        (click)="onCloseDialog()"
+        mat-button
+        mat-dialog-close
+        color="primary"
+      >
+        ยกเลิก
+      </button>
+      <button
+        (click)="onClickLogOut()"
+        mat-stroked-button
+        mat-dialog-close
+        color="warn"
+      >
+        ออกจากระบบ
+      </button>
+    </mat-dialog-actions>
+  `,
+})
+class DialogComponent {
+  constructor(
+    public dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
+
+  onCloseDialog() {
+    this.dialog.closeAll();
+  }
+
+  onClickLogOut() {
+    this.authService.clearToken();
+    this.router.navigate(['/login']);
+    this.toastr.success('Please Enter again for logging', 'Logout Success');
+    this.dialog.closeAll();
   }
 }

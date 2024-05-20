@@ -9,6 +9,6 @@ body {
   margin: 0; /* ลบ margin เริ่มต้น */
   padding: 0; /* ลบ padding เริ่มต้น */
   height: 100vh; /* ตั้งค่าให้ความสูงเต็มหน้าจอ */
-  width: 100vw; /* ตั้งค่าให้ความกว้างเต็มหน้าจอ */
+  width: 100%; /* ตั้งค่าให้ความกว้างเต็มหน้าจอ */
   box-sizing: border-box; /* รวม padding และ border ในขนาดของ element */
 }

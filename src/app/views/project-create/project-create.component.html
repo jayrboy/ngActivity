@@ -1,0 +1,113 @@
+<div class="p-3">
+  <h2 mat-dialog-title>Add Project</h2>
+
+  <mat-dialog-content>
+
+    <!-- Forms Add Project -->
+    <div>
+      <p>เพิ่มโครงการและรายการกิจกรรมต่างๆ</p>
+      <table cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="example-full-width">
+              <mat-label>Project Name</mat-label>
+              <input matInput [(ngModel)]="project.name" placeholder="Name">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field class="example-full-width">
+              <mat-label>Company ID</mat-label>
+              <input matInput disabled value="10024">
+            </mat-form-field>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="example-full-width">
+              <mat-label>Start Date</mat-label>
+              <input matInput [(ngModel)]="project.startDate" type="date">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="fill" class="example-full-width">
+              <mat-label>End Date</mat-label>
+              <input matInput [(ngModel)]="project.endDate" type="date">
+            </mat-form-field>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2">
+            <mat-form-field appearance="fill" class="example-full-width">
+              <mat-label>Add Activity</mat-label>
+              <input matInput [(ngModel)]="newActivityName" placeholder="Main Activity">
+            </mat-form-field>
+
+            <!-- ฺ(Button) Add / Done -->
+            @if(!newActivityName) {
+            <button mat-icon-button (click)="toggleNewActivityField()">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+            } @else {
+            <button mat-icon-button (click)="addActivity()">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            }
+          </td>
+        </tr>
+
+      </table>
+    </div>
+
+    <!-- Table Activities -->
+    @if (project.activities && project.activities.length > 0) {
+    <h3 class="text-bold mt-3 text-center">Activities</h3>
+    <table mat-table cellspacing="0">
+
+      <!-- Main -->
+      <tr>
+        <ng-container
+          *ngTemplateOutlet="nestedActivities; context: { $implicit: project.activities, level: 1 }"></ng-container>
+      </tr>
+
+      <!-- Sub -->
+      <ng-template #nestedActivities let-activities let-level="level">
+        <ng-container *ngFor="let subActivity of activities; let idx = index">
+          <tr>
+            @if (level === 1 && idx === 0) {
+            <td class="td">{{ subActivity.name }}</td>
+            } @else {
+            <td *ngFor="let i of [].constructor(level - 1)" class="td"></td>
+            <td class="td">{{ subActivity.name }}</td>
+            }
+
+            <!-- Remove / Add -->
+            <button mat-icon-button (click)="removeSubActivity(activities, idx)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <button mat-icon-button (click)="addSubActivity(subActivity)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </tr>
+
+          <!-- Sub Sub -->
+          @if (subActivity.inverseActivityHeader && subActivity.inverseActivityHeader.length > 0) {
+          <ng-container
+            *ngTemplateOutlet="nestedActivities; context: { $implicit: subActivity.inverseActivityHeader, level: level + 1 }"></ng-container>
+          }
+
+        </ng-container>
+      </ng-template>
+
+    </table>
+    }
+
+  </mat-dialog-content>
+
+  <!-- (Button) Cancel / Submit -->
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-stroked-button color="primary" cdkFocusInitial (click)="onSubmitCreate()">Submit</button>
+  </mat-dialog-actions>
+</div>

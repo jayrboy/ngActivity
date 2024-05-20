@@ -31,4 +31,8 @@ export class AuthService {
     localStorage.removeItem('token');
     this.tokenSubject.next(null);
   }
+
+  // getUsername() {
+  //   return this.http.get<Response>('http://localhost:8000/api/Account');
+  // }
 }

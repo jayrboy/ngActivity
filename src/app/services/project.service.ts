@@ -19,11 +19,19 @@ export class ProjectService {
     return this.http.get<Response>(`${this.baseURL}`);
   }
 
-  getById() {}
+  getById(id: number | string) {
+    return this.http.get<Response>(`${this.baseURL}/${id}`);
+  }
 
-  post() {}
+  post(project: Project) {
+    return this.http.post<Project>(`${this.baseURL}`, project);
+  }
 
-  put(project: Project) {}
+  put(project: Project) {
+    return this.http.put<Response>(`${this.baseURL}`, project);
+  }
 
-  deleteById() {}
+  delete(id: number | string) {
+    return this.http.delete<Response>(`${this.baseURL}/${id}`);
+  }
 }

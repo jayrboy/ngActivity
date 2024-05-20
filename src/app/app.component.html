@@ -13,6 +13,8 @@
           login
         </span></mat-icon>
     </button>
+    } @else{
+    <span>Welcome, {{"admin"}}</span>
     }
 
   </mat-toolbar>
@@ -23,49 +25,42 @@
   <!-- Side -->
   <mat-drawer #drawer class="example-sidenav" mode="side">
     @if (showFiller) {
-    <h4>Welcome,</h4>
-    <p>Mr.Jakkrit Onsomkrit</p>
+    <section class="p-4">
+      <h4>Welcome, {{"admin"}}</h4>
+    </section>
     }
-    <div class="mb-1">
-      <button (click)="showFiller = !showFiller"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full flex justify-center items-center">
-        <mat-icon class="mr-1"><span class="material-symbols-outlined">
-            account_circle
-          </span></mat-icon>Profile
-      </button>
-    </div>
 
-    <div class="mb-1">
-      <button routerLink="dashboard"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full flex justify-center items-center">
-        <mat-icon class="mr-1"><span class="material-symbols-outlined">
-            dashboard
-          </span></mat-icon>Dashboard
-      </button>
-    </div>
+    <ul>
+      <li>
+        <button (click)="showFiller = !showFiller"
+          class="p-3 w-full flex justify-start items-center border hover:bg-gray-100">
+          <span class="flex-shrink-0"><mat-icon>account_circle</mat-icon></span>
+          <span class="flex-grow text-center">Profile</span>
+        </button>
+      </li>
+      <li>
+        <button routerLink="dashboard" class="p-3 w-full flex justify-start items-center border hover:bg-gray-100">
+          <span class="flex-shrink-0"><mat-icon>dashboard</mat-icon></span>
+          <span class="flex-grow text-center">Dashboard</span>
+        </button>
+      </li>
+      <li>
+        <button routerLink="project" class="p-3 w-full flex justify-start items-center border hover:bg-gray-100">
+          <span class="flex-shrink-0"><mat-icon>assignment</mat-icon></span>
+          <span class="flex-grow text-center">Projects</span>
+        </button>
+      </li>
+      <li>
+        <button routerLink="users" class="mb-3 p-3 w-full flex justify-start items-center border hover:bg-gray-100">
+          <span class="flex-shrink-0"><mat-icon>groups</mat-icon></span>
+          <span class="flex-grow text-center">Users</span>
+        </button>
+      </li>
+    </ul>
 
-    <div class="mb-1">
-      <button routerLink="project"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full flex justify-center items-center">
-        <mat-icon class="mr-1"><span class="material-symbols-outlined">
-            assignment
-          </span></mat-icon>Projects
-      </button>
-    </div>
-
-    <div class="mb-1">
-      <button routerLink="users"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full flex justify-center items-center">
-        <mat-icon class="mr-1"><span class="material-symbols-outlined">
-            groups
-          </span></mat-icon>Users
-      </button>
-    </div>
-
-    <p>&nbsp;</p>
     @if (token != null) {
     <div class="flex justify-center">
-      <button mat-raised-button color="warn" (click)="openDialog('0ms', '0ms')">Log Out</button>
+      <button mat-stroked-button color="warn" (click)="openDialog('0ms', '0ms')">Log Out</button>
     </div>
     }
   </mat-drawer>

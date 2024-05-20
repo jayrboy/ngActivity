@@ -1,0 +1,14 @@
+/* CSS for Button */
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  color: #007bff; /* เปลี่ยนสีของไอคอนเมื่อเม้าส์ชี้ */
+}
+
+.td {
+  border: 1px solid #dddddd;
+}
