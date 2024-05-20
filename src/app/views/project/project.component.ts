@@ -43,4 +43,19 @@ export class ProjectComponent {
       console.log('The dialog was closed');
     });
   }
+
+  onClickProject(projectId: number) {
+    const confirmDelete = confirm('ยืนยันลบรายการนี้?');
+    if (confirmDelete) {
+      this.projectService.delete(projectId).subscribe(
+        (result) => {
+          this.AllProjects = this.AllProjects.filter((p) => p.id !== projectId);
+          window.location.reload();
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    }
+  }
 }

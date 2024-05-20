@@ -43,7 +43,7 @@
         <td class="px-2 py-1">{{ project.endDate}}</td>
         <td class="px-2 py-1 inline-flex rounded shadow-sm">
           <button class="bg-amber-500 text-sm hover:bg-amber-600 text-white py-1 px-3 mx-0.5 rounded">Manage</button>
-          <button
+          <button type="button" (click)="onClickProject(project.id)"
             class="bg-rose-500 text-sm hover:bg-rose-600 text-white py-1 px-3 rounded flex"><mat-icon>delete</mat-icon></button>
         </td>
       </tr>

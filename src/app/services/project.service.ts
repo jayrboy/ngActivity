@@ -32,6 +32,6 @@ export class ProjectService {
   }
 
   delete(id: number | string) {
-    return this.http.delete<Response>(`${this.baseURL}/${id}`);
+    return this.http.delete<Project>(`${this.baseURL}/${id}`);
   }
 }
