@@ -19,6 +19,7 @@ import Project from '../../models/project.model';
 import Activity from './../../models/activity.model';
 
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-create',
@@ -59,10 +60,10 @@ export class ProjectCreateComponent {
       const newActivity: Activity = {
         id: 0,
         projectId: 0,
-        activityHeaderID: 0,
+        activityHeaderId: 0,
         name: this.newActivityName,
-        createDate: new Date(),
-        updateDate: new Date(),
+        createDate: new Date().toISOString(),
+        updateDate: new Date().toISOString(),
         isDelete: false,
         activityHeader: null,
         inverseActivityHeader: [],
@@ -70,7 +71,7 @@ export class ProjectCreateComponent {
       };
 
       this.project.activities.push(newActivity);
-      this.newActivityName = ''; // Clear the input field after adding activity
+      this.newActivityName = '';
     }
   }
 
@@ -79,10 +80,10 @@ export class ProjectCreateComponent {
       const subActivity: Activity = {
         id: 0,
         projectId: activity.projectId,
-        activityHeaderID: activity.id,
+        activityHeaderId: activity.id,
         name: this.newActivityName,
-        createDate: new Date(),
-        updateDate: new Date(),
+        createDate: new Date().toISOString(),
+        updateDate: new Date().toISOString(),
         isDelete: false,
         activityHeader: null,
         inverseActivityHeader: [],
@@ -94,7 +95,7 @@ export class ProjectCreateComponent {
       }
 
       activity.inverseActivityHeader.push(subActivity);
-      this.newActivityName = ''; // Clear the input field after adding sub-activity
+      this.newActivityName = '';
     }
   }
 
@@ -107,13 +108,13 @@ export class ProjectCreateComponent {
   }
 
   onSubmitCreate() {
-    console.log(this.project);
+    // console.log(this.project);
 
     this.projectService.post(this.project).subscribe(
       (result) => {
         console.log(result);
-        window.location.reload();
         this.toastr.success('เพิ่มสำเร็จ');
+        window.location.reload();
       },
       (error) => this.toastr.error(error.message)
     );
