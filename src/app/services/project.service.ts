@@ -28,7 +28,7 @@ export class ProjectService {
   }
 
   put(project: Project) {
-    return this.http.put<Response>(`${this.baseURL}`, project);
+    return this.http.put<Project>(`${this.baseURL}`, project);
   }
 
   delete(id: number | string) {

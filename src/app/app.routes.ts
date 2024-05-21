@@ -5,6 +5,7 @@ import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { authGuard } from './route/auth.guard';
 import { ProjectComponent } from './views/project/project.component';
 import { PageNotFoundComponent } from './views/page-not-found/page-not-found.component';
+import { ProjectManageComponent } from './views/project-manage/project-manage.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -19,6 +20,12 @@ export const routes: Routes = [
     path: 'project',
     component: ProjectComponent,
     title: 'Project',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'manage/:id',
+    component: ProjectManageComponent,
+    title: 'Project Management',
     canActivate: [authGuard],
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },

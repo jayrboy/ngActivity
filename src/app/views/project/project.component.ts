@@ -1,3 +1,4 @@
+import { MatButtonModule } from '@angular/material/button';
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -9,11 +10,12 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { ToastrService } from 'ngx-toastr';
 import { ProjectCreateComponent } from '../project-create/project-create.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatButtonModule, MatIconModule, RouterModule],
   templateUrl: './project.component.html',
 })
 export class ProjectComponent {

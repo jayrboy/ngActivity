@@ -19,7 +19,6 @@ import Project from '../../models/project.model';
 import Activity from './../../models/activity.model';
 
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-create',
