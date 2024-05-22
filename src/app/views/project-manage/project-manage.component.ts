@@ -55,17 +55,9 @@ export class ProjectManageComponent {
 
   addActivity() {
     if (this.newActivityName.trim() !== '') {
-      const newActivity: Activity = {
-        id: 0,
-        projectId: 0,
-        activityHeaderId: 0,
+      const newActivity: any = {
         name: this.newActivityName,
-        createDate: new Date().toString(),
-        updateDate: new Date().toString(),
-        isDelete: false,
-        activityHeader: null,
         inverseActivityHeader: [],
-        project: new Project(),
       };
 
       this.project.activities.push(newActivity);
@@ -75,41 +67,41 @@ export class ProjectManageComponent {
 
   addSubActivity(activity: Activity) {
     if (this.newActivityName.trim() !== '') {
-      const subActivity: Activity = {
-        id: 0,
-        projectId: activity.projectId,
-        activityHeaderId: activity.id,
+      const subActivity: any = {
         name: this.newActivityName,
-        createDate: new Date().toISOString(),
-        updateDate: new Date().toISOString(),
-        isDelete: false,
-        activityHeader: null,
         inverseActivityHeader: [],
-        project: new Project(),
       };
-
-      if (!activity.inverseActivityHeader) {
-        activity.inverseActivityHeader = [];
-      }
 
       activity.inverseActivityHeader.push(subActivity);
       this.newActivityName = '';
     }
   }
 
-  removeSubActivity(activity: Activity[], index: number) {
-    activity.splice(index, 1);
-  }
-
+  //TODO:
   onSubmit() {
-    console.log('Before : ', this.project);
+    // console.log('Before:', this.project.activities);
 
     this._projectService.put(this.project).subscribe(
-      (result: Project) => {
-        console.log('After : ', result);
+      (result) => {
+        // console.log('After:', result);
         this._toastr.success('แก้ไขสำเร็จ');
       },
       (error) => this._toastr.error(error.message)
     );
+  }
+
+  // remove this is a activity
+  removeSubActivity(activity: Activity[], index: number) {
+    // console.log('remove :', activity[index].name);
+    let activityId = activity[index].id;
+
+    this._projectService.deleteActivity(activityId).subscribe(
+      (result) => {
+        this._toastr.success('Deleted :' + result.name);
+      },
+      (err) => this._toastr.error(err)
+    );
+
+    activity.splice(index, 1);
   }
 }
