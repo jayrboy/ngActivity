@@ -14,7 +14,6 @@ export class ProjectService {
   constructor(private http: HttpClient) {}
 
   readonly baseURL = 'http://localhost:8000/api/Project';
-  readonly baseURL2 = 'http://localhost:8000/api/Activity';
 
   // methods
   getAll() {
@@ -37,7 +36,4 @@ export class ProjectService {
     return this.http.delete<Project>(`${this.baseURL}/${id}`);
   }
 
-  deleteActivity(id: number | string) {
-    return this.http.delete<Activity>(`${this.baseURL2}/${id}`);
-  }
 }

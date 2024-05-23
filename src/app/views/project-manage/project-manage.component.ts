@@ -41,7 +41,8 @@ export class ProjectManageComponent {
     this._projectService.getById(this.projectId).subscribe(
       (result: Response) => {
         // console.log(result);
-        this.project = result.data;
+        let project = result.data;
+        this.project = project;
       },
       (error) => {
         this._toastr.error(error);
@@ -55,9 +56,17 @@ export class ProjectManageComponent {
 
   addActivity() {
     if (this.newActivityName.trim() !== '') {
-      const newActivity: any = {
+      const newActivity: Activity = {
+        id: 0,
+        projectId: 0,
+        activityHeaderId: 0,
         name: this.newActivityName,
+        createDate: new Date().toISOString(),
+        updateDate: new Date().toISOString(),
+        isDelete: false,
+        activityHeader: null,
         inverseActivityHeader: [],
+        project: new Project(),
       };
 
       this.project.activities.push(newActivity);
@@ -67,9 +76,17 @@ export class ProjectManageComponent {
 
   addSubActivity(activity: Activity) {
     if (this.newActivityName.trim() !== '') {
-      const subActivity: any = {
+      const subActivity: Activity = {
+        id: 0,
+        projectId: activity.projectId,
+        activityHeaderId: activity.id,
         name: this.newActivityName,
+        createDate: new Date().toISOString(),
+        updateDate: new Date().toISOString(),
+        isDelete: false,
+        activityHeader: null,
         inverseActivityHeader: [],
+        project: new Project(),
       };
 
       activity.inverseActivityHeader.push(subActivity);
@@ -91,17 +108,18 @@ export class ProjectManageComponent {
   }
 
   // remove this is a activity
-  removeSubActivity(activity: Activity[], index: number) {
-    // console.log('remove :', activity[index].name);
-    let activityId = activity[index].id;
+  removeSubActivity(activity: Activity): void {
+    // console.log('Deleted :', activity.name);
+    activity.isDelete = true;
 
-    this._projectService.deleteActivity(activityId).subscribe(
-      (result) => {
-        this._toastr.success('Deleted :' + result.name);
-      },
-      (err) => this._toastr.error(err)
-    );
+    activity.inverseActivityHeader.map((act) => {
+      act.isDelete = true;
 
-    activity.splice(index, 1);
+      if (act.inverseActivityHeader != null) {
+        act.inverseActivityHeader.map((subAct) =>
+          this.removeSubActivity(subAct)
+        );
+      }
+    });
   }
 }

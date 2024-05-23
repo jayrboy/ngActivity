@@ -66,16 +66,19 @@
   <!-- Table Activities -->
   @if (project.activities && project.activities.length > 0 ) {
   <h3 class="text-center mt-3">รายการกิจกรรม</h3>
+
   <table mat-table cellspacing="0" class="mx-auto">
     <!-- Main -->
     <tr>
       <ng-container
         *ngTemplateOutlet="nestedActivities; context: { $implicit: project.activities, level: 1 }"></ng-container>
     </tr>
+
     <!-- Sub -->
     <ng-template #nestedActivities let-activities let-level="level">
+
       <ng-container *ngFor="let subActivity of activities; let idx = index">
-        <tr>
+        <tr *ngIf="subActivity.isDelete != true">
           @if (level === 1 && idx === 0) {
           <!-- First Activity -->
           <td class="td bg-white hover:bg-gray-100">{{ subActivity.name }}</td>
@@ -86,7 +89,7 @@
           }
           <td>
             <!-- Remove / Add -->
-            <button mat-icon-button color="warn" (click)="removeSubActivity(activities, idx)">
+            <button mat-icon-button color="warn" (click)="removeSubActivity(subActivity)">
               <mat-icon>remove</mat-icon>
             </button>
             <button mat-icon-button color="primary" (click)="addSubActivity(subActivity)">
@@ -100,6 +103,7 @@
           *ngTemplateOutlet="nestedActivities; context: { $implicit: subActivity.inverseActivityHeader, level: level + 1 }"></ng-container>
         }
       </ng-container>
+
     </ng-template>
   </table>
   }
