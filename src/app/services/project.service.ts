@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 import Project from '../models/project.model';
 import Response from '../models/response.model';
 import Activity from '../models/activity.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
   // properties
+  token: string | null = localStorage.getItem('token');
 
   // constructor
   constructor(private http: HttpClient) {}
@@ -36,4 +38,18 @@ export class ProjectService {
     return this.http.delete<Project>(`${this.baseURL}/${id}`);
   }
 
+  postFormData(project: any, files: File[]): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('projectCreate', JSON.stringify(project));
+    files.map((f, index) => {
+      formData.append('fromFile', f, f.name);
+    });
+
+    return this.http.post(this.baseURL, formData);
+  }
+
+  download(file: File) {
+    return this.baseURL + '/download/' + file.name;
+  }
 }

@@ -19,6 +19,7 @@ import Project from '../../models/project.model';
 import Activity from './../../models/activity.model';
 
 import { ToastrService } from 'ngx-toastr';
+import Response from '../../models/response.model';
 
 @Component({
   selector: 'app-project-create',
@@ -42,6 +43,12 @@ export class ProjectCreateComponent {
   project = new Project();
   newActivityName: string = '';
   subActivityName: string = '';
+
+  file_name: string = '';
+  // file: File | null = null;
+  file: File[] = []; // Change to an array to store multiple files
+  file_url: string = '';
+  show_url: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<ProjectCreateComponent>,
@@ -106,16 +113,41 @@ export class ProjectCreateComponent {
     this.dialogRef.close();
   }
 
+  //TODO:
+  onFileSelected(event: any): void {
+    const files: FileList = event.target.files; // Get the file list
+    if (files.length > 0) {
+      this.file = Array.from(files); // Convert FileList to an array
+      this.show_url = URL.createObjectURL(files[0]); // Show URL for the first file as an example
+      this.file_name = files[0].name; // Show name of the first file as an example
+    }
+  }
+
   onSubmitCreate() {
     // console.log(this.project);
+    // console.log(this.file);
 
-    this.projectService.post(this.project).subscribe(
-      (result) => {
-        console.log(result);
-        this.toastr.success('เพิ่มสำเร็จ');
-        window.location.reload();
-      },
-      (error) => this.toastr.error(error.message)
-    );
+    if (this.file != null) {
+      this.projectService.postFormData(this.project, this.file).subscribe(
+        (result: Response) => {
+          console.log(result.data);
+
+          if (this.file.length > 0) {
+            // Assuming `download` method can handle an array of files
+            this.file.map((f, index) => {
+              const fileUrl = this.projectService.download(f);
+              console.log(fileUrl);
+            });
+          }
+          this.toastr.success('เพิ่มข้อมูล สำเร็จ');
+          window.location.reload();
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    } else {
+      console.error('No file selected');
+    }
   }
 }
