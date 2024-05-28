@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import Login from '../models/login.model';
+import Login from '../models/account.model';
 import Response from '../models/response.model';
 import { BehaviorSubject } from 'rxjs';
 
@@ -16,7 +16,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  readonly baseURL = 'http://localhost:8000/api/Login';
+  readonly baseURL = 'http://localhost:8000/api/Account/Login';
 
   logIn(account: Login) {
     return this.http.post<Response>(`${this.baseURL}`, account); // Tested

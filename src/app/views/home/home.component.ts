@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { AuthService } from './../../services/auth.service';
-import Login from '../../models/login.model';
+import Login from '../../models/account.model';
 
 export interface Tile {
   color: string;

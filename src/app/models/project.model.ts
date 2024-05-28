@@ -1,4 +1,5 @@
 import Activity from './activity.model';
+import ProjectFile from './project-file.model';
 
 export default class Project {
   id: number = 0;
@@ -9,5 +10,6 @@ export default class Project {
   updateDate: Date = new Date();
   isDelete: boolean = false;
   activities: Activity[] = [];
-  fileXprojects: any[] = []; // ไม่มีโมเดล FileXproject จึงใช้ any ชั่วคราว
+  // projectFile: ProjectFile[] = []; // .NET Core [JsonIgnore]
+  file: File[] = [];
 }

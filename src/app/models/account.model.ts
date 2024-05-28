@@ -3,7 +3,4 @@ export default class Account {
   username = '';
   password = '';
   role = '';
-  createDate = new Date();
-  updateDate = new Date();
-  isDeleted = false;
 }

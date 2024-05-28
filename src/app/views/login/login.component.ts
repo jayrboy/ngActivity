@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 
-import Login from '../../models/login.model';
+import Login from '../../models/account.model';
 import Response from '../../models/response.model';
 import { AuthService } from '../../services/auth.service';
 

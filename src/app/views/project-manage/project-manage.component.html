@@ -6,7 +6,7 @@
   <p class="text-xl flex items-center">แก้ไขโครงการ 2024</p>
 </header>
 
-<div class="p-3">
+<div class="form-content p-3">
 
   <!-- Forms Manage Project -->
   <table mat-table cellspacing="0" class="mx-auto">
@@ -43,6 +43,17 @@
 
     <tr>
       <td colspan="2">
+        <mat-form-field class="w-full">
+          <mat-label>Upload</mat-label>
+          <button mat-icon-button matPrefix (click)="f_input.click()"><mat-icon>attach_file</mat-icon></button>
+          <input readonly matInput [(ngModel)]="file" placeholder="Files or Project">
+          <input type="file" multiple #f_input hidden (change)="onFileSelected($event)" />
+        </mat-form-field>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
         <mat-form-field appearance="fill">
           <mat-label>Add Activity</mat-label>
           <input matInput [(ngModel)]="newActivityName" placeholder="Main Activity">
@@ -60,7 +71,6 @@
         }
       </td>
     </tr>
-
   </table>
 
   <!-- Table Activities -->
@@ -108,7 +118,6 @@
   </table>
   }
 
-  <br>
   <!-- Cancel / Submit Buttons -->
   <div class="flex justify-center mt-4 mb-5">
     <button mat-button [routerLink]="['/project']">Back</button>
@@ -116,4 +125,5 @@
     <button mat-flat-button color="primary" cdkFocusInitial (click)="onSubmit()">Submit</button>
   </div>
 </div>
+
 <br>

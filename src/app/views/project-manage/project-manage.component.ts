@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import Activity from '../../models/activity.model';
 
@@ -32,6 +32,9 @@ export class ProjectManageComponent {
   project = new Project();
   newActivityName = '';
 
+  file: File | null = null;
+  file_url = '';
+
   constructor(
     private _route: ActivatedRoute,
     private _projectService: ProjectService,
@@ -40,7 +43,7 @@ export class ProjectManageComponent {
     this.projectId = Number(this._route.snapshot.params['id']);
     this._projectService.getById(this.projectId).subscribe(
       (result: Response) => {
-        // console.log(result);
+        console.log(result);
         let project = result.data;
         this.project = project;
       },
@@ -94,7 +97,6 @@ export class ProjectManageComponent {
     }
   }
 
-  //TODO:
   onSubmit() {
     // console.log('Before:', this.project.activities);
 
@@ -121,5 +123,15 @@ export class ProjectManageComponent {
         );
       }
     });
+  }
+
+  //TODO:
+  onFileSelected(event: any): void {
+    console.log(event.target.files[0]);
+
+    this.file = event.target.files[0].name;
+    this.file_url = event.target.files[0].url;
+
+    // this.project.fileXprojects = event.target.files[0].name;
   }
 }

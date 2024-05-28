@@ -18,7 +18,7 @@ import {
 
 import { ToastrService } from 'ngx-toastr';
 
-import Account from './models/account.model';
+import Account from './models/user.model';
 
 @Component({
   selector: 'app-root',

@@ -1,4 +1,4 @@
-export default class FileXProject {
+export default class ProjectFile {
   id = 0;
   projectID = 0;
   fileID = 0;
