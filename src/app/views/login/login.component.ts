@@ -43,7 +43,8 @@ export class LoginComponent {
   username = new FormControl('', [Validators.required]);
 
   loginForm = new Login();
-  token = '';
+  token: string = '';
+  role: string = '';
 
   constructor(
     private authService: AuthService,
@@ -57,8 +58,10 @@ export class LoginComponent {
     } else {
       this.authService.logIn(this.loginForm).subscribe(
         (result: Response) => {
+          // console.log(result.data);
           this.token = result.data.token;
-          this.authService.setToken(this.token); // Set the token in the service
+          this.role = result.data.role;
+          this.authService.setToken(this.token, this.role); // Set the token in the service
           this.router.navigate(['/dashboard']);
           this.toastr.success('Login Successfully', 'Success');
         },

@@ -14,6 +14,11 @@ export class AuthService {
   );
   token$ = this.tokenSubject.asObservable();
 
+  roleSubject = new BehaviorSubject<string | null>(
+    localStorage.getItem('role')
+  );
+  role$ = this.roleSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   readonly baseURL = 'http://localhost:8000/api/Account/Login';
@@ -22,17 +27,17 @@ export class AuthService {
     return this.http.post<Response>(`${this.baseURL}`, account); // Tested
   }
 
-  setToken(token: string) {
+  setToken(token: string, role: string) {
     localStorage.setItem('token', token);
+    localStorage.setItem('role', role);
     this.tokenSubject.next(token);
+    this.roleSubject.next(role);
   }
 
   clearToken() {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     this.tokenSubject.next(null);
+    this.roleSubject.next(null);
   }
-
-  // getUsername() {
-  //   return this.http.get<Response>('http://localhost:8000/api/Account');
-  // }
 }

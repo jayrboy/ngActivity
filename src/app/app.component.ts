@@ -41,7 +41,8 @@ export class AppComponent {
   showFiller = false;
   token: string | null = null;
   tokenSubscription = new Subscription();
-  username = '';
+  role: string | null = null;
+  roleSubscription = new Subscription();
 
   constructor(
     private authService: AuthService,
@@ -51,13 +52,12 @@ export class AppComponent {
   ) {}
 
   ngOnInit() {
-    this.tokenSubscription = this.authService.token$.subscribe(
-      (token) => (this.token = token)
+    this.tokenSubscription = this.authService.token$.subscribe((token) => {
+      this.token = token;
+    });
+    this.roleSubscription = this.authService.role$.subscribe(
+      (role) => (this.role = role)
     );
-
-    // this.accountService
-    //   .getUsername()
-    //   .subscribe((result) => console.log(result));
   }
 
   ngOnDestroy() {
