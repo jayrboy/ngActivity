@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import Project from '../../models/project.model';
 import Response from '../../models/response.model';
@@ -11,6 +11,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, FormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import Activity from '../../models/activity.model';
+import FileModel from '../../models/file.model';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-project-manage',
@@ -23,6 +26,8 @@ import Activity from '../../models/activity.model';
     MatButtonModule,
     MatFormFieldModule,
     RouterModule,
+    MatDividerModule,
+    MatListModule,
   ],
   templateUrl: './project-manage.component.html',
   styleUrl: './project-manage.component.css',
@@ -32,20 +37,30 @@ export class ProjectManageComponent {
   project = new Project();
   newActivityName = '';
 
-  file: File | null = null;
-  file_url = '';
+  file: File[] = []; // Change to an array to store multiple files
+  file_url: string = '';
+  show_url: string = '';
+
+  showFiles: FileModel[] = [];
+  file_name: string = '';
+
+  url_list: [] = [];
+  file_list: [] = [];
+
 
   constructor(
     private _route: ActivatedRoute,
     private _projectService: ProjectService,
-    private _toastr: ToastrService
+    private _toastr: ToastrService,
+    private _router: Router
   ) {
     this.projectId = Number(this._route.snapshot.params['id']);
     this._projectService.getById(this.projectId).subscribe(
       (result: Response) => {
-        console.log(result);
-        let project = result.data;
-        this.project = project;
+        // console.log(result);
+
+        this.project = result.data;
+        this.showFiles = result.data.file;
       },
       (error) => {
         this._toastr.error(error);
@@ -97,18 +112,6 @@ export class ProjectManageComponent {
     }
   }
 
-  onSubmit() {
-    // console.log('Before:', this.project.activities);
-
-    this._projectService.put(this.project).subscribe(
-      (result) => {
-        // console.log('After:', result);
-        this._toastr.success('แก้ไขสำเร็จ');
-      },
-      (error) => this._toastr.error(error.message)
-    );
-  }
-
   // remove this is a activity
   removeSubActivity(activity: Activity): void {
     // console.log('Deleted :', activity.name);
@@ -126,12 +129,73 @@ export class ProjectManageComponent {
   }
 
   //TODO:
-  onFileSelected(event: any): void {
-    console.log(event.target.files[0]);
+  uploading(event: any): void {
+    let files: FileList = event.target.files; // Get the file list
+    this.file = Array.from(files); // Convert FileList to an array
 
-    this.file = event.target.files[0].name;
-    this.file_url = event.target.files[0].url;
+    if (files.length > 5) {
+      this._toastr.warning('กรุณาเพิ่มไฟล์ได้ไม่เกินครั้งละ 5 ไฟล์');
+      this.file_name = '';
+      this.file = [];
+    } else {
+      this.file.map((f, i) => {
+        if (f.size > 100 * 1024) {
+          this._toastr.warning('ขนาดไฟล์ของไฟล์ต้องไม่เกิน 100 KB');
+          this.file_name = '';
+          this.file = [];
+        }
 
-    // this.project.fileXprojects = event.target.files[0].name;
+        this.show_url = URL.createObjectURL(files[0]); // Show URL for the first file as an example
+        this.file_name = files[0].name; // Show name of the first file as an example
+      });
+    }
+  }
+
+  onSubmit() {
+    // console.log(this.project);
+    // console.log(this.file);
+
+    this._projectService.putFormData(this.project, this.file).subscribe(
+      (result: Response) => {
+        console.log(result.data);
+
+        if (this.file.length > 0) {
+          // loop files
+          this.file.forEach((f) => {
+            const fileUrl = this._projectService.download(f);
+          });
+        }
+
+        this._router.navigate(['/']).then(() => {
+          this._router.navigate(['/manage', this.projectId]);
+          this._toastr.success('อัปเดตข้อมูลสำเร็จ');
+        });
+      },
+      (error) => {
+        this._toastr.error(error.message);
+      }
+    );
+  }
+
+  onDownload(file: File) {
+    this._projectService.download(file);
+  }
+
+  onIsDelete(id: any) {
+    const confirmDelete = confirm('ยืนยันลบรายการนี้?');
+
+    if (confirmDelete) {
+      this._projectService.deleteFile(id).subscribe(
+        (result) => {
+          console.log(result);
+
+          this._toastr.success('ลบข้อมูล สำเร็จ');
+          window.location.reload();
+        },
+        (error) => {
+          this._toastr.error(error.message);
+        }
+      );
+    }
   }
 }

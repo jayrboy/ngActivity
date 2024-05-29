@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import Project from '../models/project.model';
 import Response from '../models/response.model';
 import Activity from '../models/activity.model';
+import FileModel from '../models/file.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -38,9 +39,8 @@ export class ProjectService {
     return this.http.delete<Project>(`${this.baseURL}/${id}`);
   }
 
-  postFormData(project: any, files: File[]): Observable<any> {
+  postFormData(project: Project, files: File[]): Observable<any> {
     const formData = new FormData();
-
     formData.append('projectCreate', JSON.stringify(project));
     files.map((f, index) => {
       formData.append('fromFile', f, f.name);
@@ -49,7 +49,21 @@ export class ProjectService {
     return this.http.post(this.baseURL, formData);
   }
 
+  putFormData(project: Project, files: File[]): Observable<any> {
+    const formData = new FormData();
+    formData.append('project', JSON.stringify(project));
+    files.forEach((f) => {
+      formData.append('formFile', f, f.name);
+    });
+
+    return this.http.put(this.baseURL, formData);
+  }
+
   download(file: File) {
     return this.baseURL + '/download/' + file.name;
+  }
+
+  deleteFile(id: any) {
+    return this.http.delete('http://localhost:8000/api/File/' + id);
   }
 }

@@ -15,7 +15,7 @@
       <td>
         <mat-form-field appearance="fill">
           <mat-label>Project Name</mat-label>
-          <input matInput [(ngModel)]="project.name" placeholder="Name">
+          <input matInput [(ngModel)]="project.name" placeholder="Name" req>
         </mat-form-field>
       </td>
       <td>
@@ -46,11 +46,49 @@
         <mat-form-field class="w-full">
           <mat-label>Upload</mat-label>
           <button mat-icon-button matPrefix (click)="f_input.click()"><mat-icon>attach_file</mat-icon></button>
-          <input readonly matInput [(ngModel)]="file" placeholder="Files or Project">
-          <input type="file" multiple #f_input hidden (change)="onFileSelected($event)" />
+          <input readonly matInput #name="ngModel" [(ngModel)]="file_name" name="file" placeholder="Files or Project">
+          <input type="file" multiple #f_input hidden (change)="uploading($event)" required />
+          <mat-hint align="end">files {{this.file.length}}/5</mat-hint>
+          @if (name.errors?.['required']) {
+          <mat-error>Upload File is <strong>required</strong></mat-error>
+          }
         </mat-form-field>
       </td>
     </tr>
+
+    @if(this.file.length > 0) {
+    <strong>Files to Upload</strong>
+    <tr *ngFor="let f of file, let i = index">
+      <td colspan="2">
+        <mat-list>
+          <mat-list-item>
+            {{i + 1}}.&nbsp;{{f.name}}
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </mat-list>
+      </td>
+    </tr>
+    }
+    @if(showFiles.length > 0) {
+    <br>
+    <strong>Click to Download File</strong>
+    <tr *ngFor="let f of showFiles, let i = index">
+      <td colspan="2">
+        <mat-list>
+          <mat-list-item>
+            {{i + 1}}.
+            &nbsp;
+            <a [href]="show_url" target="_blank" download class="text-blue-400 hover:text-blue-700">{{f.fileName}}</a>
+            &nbsp;
+            <button type="button" (click)="onIsDelete(f.id)" mat-button
+              color="warn"><mat-icon>delete</mat-icon></button>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </mat-list>
+      </td>
+    </tr>
+    }
+
 
     <tr>
       <td colspan="2">
@@ -79,23 +117,31 @@
 
   <table mat-table cellspacing="0" class="mx-auto">
     <!-- Main -->
+    <!-- ใช้ ngTemplateOutlet เพื่อแสดงกิจกรรมหลัก โดยส่ง project.activities และระดับ (level) เริ่มต้นเป็น 1 -->
     <tr>
       <ng-container
         *ngTemplateOutlet="nestedActivities; context: { $implicit: project.activities, level: 1 }"></ng-container>
     </tr>
 
     <!-- Sub -->
+    <!-- สร้างโครงสร้างของกิจกรรมที่สามารถซ้อนกันได้ #nestedActivities) เป็นเทมเพลตสำหรับกิจกรรมย่อย -->
     <ng-template #nestedActivities let-activities let-level="level">
 
       <ng-container *ngFor="let subActivity of activities; let idx = index">
         <tr *ngIf="subActivity.isDelete != true">
           @if (level === 1 && idx === 0) {
           <!-- First Activity -->
-          <td class="td bg-white hover:bg-gray-100">{{ subActivity.name }}</td>
+          <td>
+            <mat-form-field>
+              <input matInput [(ngModel)]=" subActivity.name" placeholder="Main Activity">
+            </mat-form-field>
+          </td>
           } @else {
           <!-- Sub Activity -->
-          <td class="td bg-white hover:bg-gray-100" *ngFor="let i of [].constructor(level - 1)"></td>
-          <td class="td bg-white hover:bg-gray-100">{{ subActivity.name }}</td>
+          <td *ngFor="let i of [].constructor(level - 1)"></td>
+          <td><mat-form-field>
+              <input matInput [(ngModel)]=" subActivity.name" placeholder="Main Activity">
+            </mat-form-field></td>
           }
           <td>
             <!-- Remove / Add -->
