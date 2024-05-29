@@ -1,75 +1,87 @@
-<div class="p-3">
+<form (submit)="onSubmitCreate()" class="p-3" #projectForm="ngForm">
   <h2 mat-dialog-title>Add Project</h2>
 
   <mat-dialog-content>
 
     <!-- Forms Add Project -->
-    <div>
-      <p>เพิ่มโครงการและรายการกิจกรรมต่างๆ</p>
-      <table cellspacing="0">
-        <tr>
-          <td>
-            <mat-form-field appearance="fill" class="example-full-width">
-              <mat-label>Project Name</mat-label>
-              <input matInput [(ngModel)]="project.name" placeholder="Name">
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field class="example-full-width">
-              <mat-label>Company ID</mat-label>
-              <input matInput disabled value="10024">
-            </mat-form-field>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <mat-form-field appearance="fill" class="example-full-width">
-              <mat-label>Start Date</mat-label>
-              <input matInput [(ngModel)]="project.startDate" type="date">
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field appearance="fill" class="example-full-width">
-              <mat-label>End Date</mat-label>
-              <input matInput [(ngModel)]="project.endDate" type="date">
-            </mat-form-field>
-          </td>
-        </tr>
-
-        <tr>
-          <td colspan="2">
-            <mat-form-field class="w-full">
-              <mat-label>Upload</mat-label>
-              <button mat-icon-button matPrefix (click)="f_input.click()"><mat-icon>attach_file</mat-icon></button>
-              <input readonly matInput [(ngModel)]="file_name" name="file" placeholder="Files or Project">
-              <input type="file" multiple #f_input hidden (change)="onFileSelected($event)" />
-            </mat-form-field>
-          </td>
-        </tr>
-
-        <tr>
-          <td colspan="2">
-            <mat-form-field appearance="fill" class="example-full-width">
-              <mat-label>Add Activity</mat-label>
-              <input matInput [(ngModel)]="newActivityName" placeholder="Main Activity">
-            </mat-form-field>
-
-            <!-- ฺ(Button) Add / Done -->
-            @if(!newActivityName) {
-            <button mat-icon-button (click)="toggleNewActivityField()">
-              <mat-icon>add_circle</mat-icon>
-            </button>
-            } @else {
-            <button mat-icon-button (click)="addActivity()">
-              <mat-icon>check_circle</mat-icon>
-            </button>
+    <p>เพิ่มโครงการและรายการกิจกรรมต่างๆ</p>
+    <table cellspacing="0">
+      <tr>
+        <td>
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Project Name</mat-label>
+            <input matInput [(ngModel)]="project.name" #name="ngModel" name="name" placeholder="Name" required>
+            <!-- @if (name.errors?.['required']) {
+            <mat-error>Project Name is <strong>required</strong></mat-error>
+            } -->
+            @if(name.errors?.['required']) {
+            <mat-error>Project Name is <strong>required</strong></mat-error>
             }
-          </td>
-        </tr>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Company ID</mat-label>
+            <input matInput disabled value="10024">
+          </mat-form-field>
+        </td>
+      </tr>
 
-      </table>
-    </div>
+      <tr>
+        <td>
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Start Date</mat-label>
+            <input matInput [(ngModel)]="project.startDate" #startDate="ngModel" name="startDate" type="date" required>
+            @if (startDate.errors?.['required']) {
+            <mat-error>Start Date is <strong>required</strong></mat-error>
+            }
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>End Date</mat-label>
+            <input matInput [(ngModel)]="project.endDate" #endDate="ngModel" name="endDate" type="date" required>
+            @if (endDate.errors?.['required']) {
+            <mat-error>End Date is <strong>required</strong></mat-error>
+            }
+          </mat-form-field>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2">
+          <mat-form-field class="w-full">
+            <mat-label>Upload</mat-label>
+            <button type="button" mat-icon-button matPrefix
+              (click)="f_input.click()"><mat-icon>attach_file</mat-icon></button>
+            <input readonly matInput [(ngModel)]="file_name" name="file" placeholder="Files or Project">
+            <input type="file" multiple #f_input hidden (change)="uploading($event)" />
+            <mat-hint align="end">files {{this.file.length}}/5</mat-hint>
+          </mat-form-field>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Add Activity</mat-label>
+            <input matInput [(ngModel)]="newActivityName" name="activityName" placeholder="Main Activity">
+          </mat-form-field>
+
+          <!-- ฺ(Button) Add / Done -->
+          @if(!newActivityName) {
+          <button mat-icon-button (click)="toggleNewActivityField()">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+          } @else {
+          <button mat-icon-button (click)="addActivity()">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+          }
+        </td>
+      </tr>
+
+    </table>
 
     <!-- Table Activities -->
     @if (project.activities && project.activities.length > 0) {
@@ -118,7 +130,11 @@
 
   <!-- (Button) Cancel / Submit -->
   <mat-dialog-actions align="end">
-    <button mat-button (click)="onNoClick()">Cancel</button>
-    <button mat-stroked-button color="primary" cdkFocusInitial (click)="onSubmitCreate()">Submit</button>
+    <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
+    <button mat-flat-button type="submit" color="primary" cdkFocusInitial>Submit</button>
+    <!-- <button mat-flat-button type="submit" color="primary" cdkFocusInitial
+      [disabled]="projectForm.invalid">Submit</button> -->
   </mat-dialog-actions>
-</div>
+
+
+</form>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import Project from '../../models/project.model';
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormControl, FormsModule, Validators } from '@angular/forms';
+import { FormControl, FormsModule, NgForm, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import Activity from '../../models/activity.model';
 import FileModel from '../../models/file.model';
@@ -47,6 +47,7 @@ export class ProjectManageComponent {
   url_list: [] = [];
   file_list: [] = [];
 
+  @ViewChild('projectForm') form!: NgForm;
 
   constructor(
     private _route: ActivatedRoute,
@@ -137,17 +138,21 @@ export class ProjectManageComponent {
       this._toastr.warning('กรุณาเพิ่มไฟล์ได้ไม่เกินครั้งละ 5 ไฟล์');
       this.file_name = '';
       this.file = [];
+      event.target.value = null;
     } else {
       this.file.map((f, i) => {
         if (f.size > 100 * 1024) {
-          this._toastr.warning('ขนาดไฟล์ของไฟล์ต้องไม่เกิน 100 KB');
           this.file_name = '';
+          this._toastr.warning('ขนาดไฟล์ของไฟล์ต้องไม่เกิน 100 KB');
           this.file = [];
+          event.target.value = null;
         }
-
-        this.show_url = URL.createObjectURL(files[0]); // Show URL for the first file as an example
-        this.file_name = files[0].name; // Show name of the first file as an example
       });
+    }
+
+    if (files.length > 0) {
+      this.show_url = URL.createObjectURL(files[0]); // Show URL for the first file as an example
+      this.file_name = files[0].name; // Show name of the first file as an example
     }
   }
 
@@ -155,26 +160,28 @@ export class ProjectManageComponent {
     // console.log(this.project);
     // console.log(this.file);
 
-    this._projectService.putFormData(this.project, this.file).subscribe(
-      (result: Response) => {
-        console.log(result.data);
+    if (this.form.valid) {
+      this._projectService.putFormData(this.project, this.file).subscribe(
+        (result: Response) => {
+          // console.log(result.data);
 
-        if (this.file.length > 0) {
-          // loop files
-          this.file.forEach((f) => {
-            const fileUrl = this._projectService.download(f);
+          if (this.file.length > 0) {
+            // loop files
+            this.file.forEach((f) => {
+              const fileUrl = this._projectService.download(f);
+            });
+          }
+
+          this._router.navigate(['/']).then(() => {
+            this._router.navigate(['/manage', this.projectId]);
+            this._toastr.success('อัปเดตข้อมูลสำเร็จ');
           });
+        },
+        (error) => {
+          this._toastr.error(error.message);
         }
-
-        this._router.navigate(['/']).then(() => {
-          this._router.navigate(['/manage', this.projectId]);
-          this._toastr.success('อัปเดตข้อมูลสำเร็จ');
-        });
-      },
-      (error) => {
-        this._toastr.error(error.message);
-      }
-    );
+      );
+    }
   }
 
   onDownload(file: File) {
@@ -187,7 +194,7 @@ export class ProjectManageComponent {
     if (confirmDelete) {
       this._projectService.deleteFile(id).subscribe(
         (result) => {
-          console.log(result);
+          // console.log(result);
 
           this._toastr.success('ลบข้อมูล สำเร็จ');
           window.location.reload();
