@@ -76,6 +76,7 @@
       </td>
     </tr>
     }
+
     @if(showFiles.length > 0) {
     <br>
     <strong>Click to Download File</strong>
@@ -85,7 +86,8 @@
           <mat-list-item>
             {{i + 1}}.
             &nbsp;
-            <a [href]="show_url" target="_blank" download class="text-blue-400 hover:text-blue-700">{{f.fileName}}</a>
+            <a [href]="'http://localhost:8000/api/File/download/'+ f.id " target="_blank" download
+              class="text-blue-400 hover:text-blue-700">{{f.fileName}}</a>
             &nbsp;
             <button type="button" (click)="onIsDelete(f.id)" mat-button
               color="warn"><mat-icon>delete</mat-icon></button>
@@ -119,57 +121,60 @@
   </table>
 
   <!-- Table Activities -->
-  @if (project.activities && project.activities.length > 0 ) {
+  @if (project.activities && project.activities.length > 0) {
   <h3 class="text-center mt-3">รายการกิจกรรม</h3>
 
   <table mat-table cellspacing="0" class="mx-auto">
-    <!-- Main -->
-    <!-- ใช้ ngTemplateOutlet เพื่อแสดงกิจกรรมหลัก โดยส่ง project.activities และระดับ (level) เริ่มต้นเป็น 1 -->
-    <tr>
-      <ng-container
-        *ngTemplateOutlet="nestedActivities; context: { $implicit: project.activities, level: 1 }"></ng-container>
-    </tr>
+    <!-- Angular Template Outlet เพื่อแสดงกิจกรรมหลัก โดยส่ง project.activities และระดับ (level) เริ่มต้นเป็น 1 -->
+    <ng-container *ngTemplateOutlet="nestedActivities; context: { $implicit: project.activities, level: 1 }">
+    </ng-container>
 
-    <!-- Sub -->
-    <!-- สร้างโครงสร้างของกิจกรรมที่สามารถซ้อนกันได้ #nestedActivities) เป็นเทมเพลตสำหรับกิจกรรมย่อย -->
+    <!-- สร้างโครงสร้างของกิจกรรมที่ซ้อน #nested เป็น template สำหรับ กิจกรรมหลัก และกิจกรรมย่อย -->
     <ng-template #nestedActivities let-activities let-level="level">
-
-      <ng-container *ngFor="let subActivity of activities; let idx = index">
-        <tr *ngIf="subActivity.isDelete != true">
-          @if (level === 1 && idx === 0) {
-          <!-- First Activity -->
+      <ng-container *ngFor="let sub of activities; let index = index; trackBy: trackByFn">
+        <tr>
+          @if (level == 1 && index == 0) {
+          <!-- Main Activity -->
           <td>
             <mat-form-field>
-              <input matInput [(ngModel)]=" subActivity.name" name="mainActivity" placeholder="Main Activity">
+              <input matInput [(ngModel)]="sub.name" name="mainActivity" placeholder="Main Activity">
             </mat-form-field>
           </td>
           } @else {
-          <!-- Sub Activity -->
+          <!-- เติมช่องว่างสำหรับกิจกรรมย่อย -->
           <td *ngFor="let i of [].constructor(level - 1)"></td>
-          <td><mat-form-field>
-              <input matInput [(ngModel)]=" subActivity.name" name="subActivity" placeholder="Main Activity">
-            </mat-form-field></td>
-          }
+          <!-- Sub Activity -->
           <td>
-            <!-- Remove / Add -->
-            <button type="button" mat-icon-button color="warn" (click)="removeSubActivity(subActivity)">
+            <!-- index:{{index}}, level:{{level}} -->
+            <mat-form-field>
+              <input matInput [(ngModel)]="sub.name" name="{{sub.name}}" placeholder="Sub Activity">
+            </mat-form-field>
+          </td>
+          }
+
+          <!-- Button Remove / Add Activity -->
+          <td>
+            <button type="button" mat-icon-button color="warn" (click)="removeSubActivity(sub)">
               <mat-icon>remove</mat-icon>
             </button>
-            <button type="button" mat-icon-button color="primary" (click)="addSubActivity(subActivity)">
+            <button type="button" mat-icon-button color="primary" (click)="addSubActivity(sub)">
               <mat-icon>add</mat-icon>
             </button>
           </td>
         </tr>
-        <!-- Sub Sub -->
-        @if (subActivity.inverseActivityHeader && subActivity.inverseActivityHeader.length > 0) {
+
+        <!-- แสดงกิจกรรมย่อยถ้ามี -->
+        @if (sub.inverseActivityHeader && sub.inverseActivityHeader.length > 0) {
         <ng-container
-          *ngTemplateOutlet="nestedActivities; context: { $implicit: subActivity.inverseActivityHeader, level: level + 1 }"></ng-container>
+          *ngTemplateOutlet="nestedActivities; context: { $implicit: sub.inverseActivityHeader, level: level + 1 }">
+        </ng-container>
         }
       </ng-container>
-
     </ng-template>
   </table>
   }
+
+
 
   <!-- Cancel / Submit Buttons -->
   <div class="flex justify-center mt-4 mb-5">
@@ -179,4 +184,5 @@
   </div>
 </form>
 
+<br>
 <br>

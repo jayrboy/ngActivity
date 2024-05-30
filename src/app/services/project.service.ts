@@ -63,6 +63,10 @@ export class ProjectService {
     return this.baseURL + '/download/' + file.name;
   }
 
+  downloadV2(id: any) {
+    return 'http://localhost:800/api/File/download/' + id;
+  }
+
   deleteFile(id: any) {
     return this.http.delete('http://localhost:8000/api/File/' + id);
   }

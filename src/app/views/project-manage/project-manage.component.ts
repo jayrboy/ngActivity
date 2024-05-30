@@ -36,6 +36,7 @@ export class ProjectManageComponent {
   projectId = -1;
   project = new Project();
   newActivityName = '';
+  rows: number = 0;
 
   file: File[] = []; // Change to an array to store multiple files
   file_url: string = '';
@@ -58,7 +59,7 @@ export class ProjectManageComponent {
     this.projectId = Number(this._route.snapshot.params['id']);
     this._projectService.getById(this.projectId).subscribe(
       (result: Response) => {
-        // console.log(result);
+        console.log(result);
 
         this.project = result.data;
         this.showFiles = result.data.file;
@@ -184,8 +185,9 @@ export class ProjectManageComponent {
     }
   }
 
-  onDownload(file: File) {
-    this._projectService.download(file);
+  onDownload(file: any) {
+    console.log(file);
+    // this._projectService.downloadV2(file);
   }
 
   onIsDelete(id: any) {
@@ -204,5 +206,9 @@ export class ProjectManageComponent {
         }
       );
     }
+  }
+
+  trackByFn(index: number, item: any): any {
+    return item.id || index; // แต่ละกิจกรรมมี id ที่ไม่ซ้ำกัน
   }
 }
