@@ -119,15 +119,15 @@ export class ProjectManageComponent {
     // console.log('Deleted :', activity.name);
     activity.isDelete = true;
 
-    activity.inverseActivityHeader.map((act) => {
-      act.isDelete = true;
+    // activity.inverseActivityHeader.map((act) => {
+    //   act.isDelete = true;
 
-      if (act.inverseActivityHeader != null) {
-        act.inverseActivityHeader.map((subAct) =>
-          this.removeSubActivity(subAct)
-        );
-      }
-    });
+    //   if (act.inverseActivityHeader != null) {
+    //     act.inverseActivityHeader.map((subAct) =>
+    //       this.removeSubActivity(subAct)
+    //     );
+    //   }
+    // });
   }
 
   //TODO:

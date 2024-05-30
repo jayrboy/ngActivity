@@ -11,16 +11,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { ProjectCreateComponent } from '../project-create/project-create.component';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, RouterModule],
+  imports: [MatButtonModule, MatIconModule, RouterModule, CommonModule],
   templateUrl: './project.component.html',
 })
 export class ProjectComponent {
   AllProjects: Project[] = [];
   project = new Project();
+  role = localStorage.getItem('role');
 
   constructor(
     private projectService: ProjectService,

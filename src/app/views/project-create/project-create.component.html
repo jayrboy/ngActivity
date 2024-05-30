@@ -7,22 +7,13 @@
     <p>เพิ่มโครงการและรายการกิจกรรมต่างๆ</p>
     <table cellspacing="0">
       <tr>
-        <td>
-          <mat-form-field appearance="fill" class="example-full-width">
+        <td colspan="2">
+          <mat-form-field appearance="fill" class="w-full">
             <mat-label>Project Name</mat-label>
             <input matInput [(ngModel)]="project.name" #name="ngModel" name="name" placeholder="Name" required>
-            <!-- @if (name.errors?.['required']) {
-            <mat-error>Project Name is <strong>required</strong></mat-error>
-            } -->
             @if(name.errors?.['required']) {
             <mat-error>Project Name is <strong>required</strong></mat-error>
             }
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field class="example-full-width">
-            <mat-label>Company ID</mat-label>
-            <input matInput disabled value="10024">
           </mat-form-field>
         </td>
       </tr>

@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from './services/auth.service';
@@ -15,10 +15,6 @@ import {
   MatDialogActions,
   MatDialogContent,
 } from '@angular/material/dialog';
-
-import { ToastrService } from 'ngx-toastr';
-
-import Account from './models/user.model';
 
 @Component({
   selector: 'app-root',
@@ -44,12 +40,7 @@ export class AppComponent {
   role: string | null = null;
   roleSubscription = new Subscription();
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    public dialog: MatDialog,
-    private accountService: AuthService
-  ) {}
+  constructor(private authService: AuthService, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.tokenSubscription = this.authService.token$.subscribe((token) => {
@@ -64,11 +55,6 @@ export class AppComponent {
     if (this.tokenSubscription) {
       this.tokenSubscription.unsubscribe();
     }
-  }
-
-  onClickLogOut() {
-    this.authService.clearToken();
-    this.router.navigate(['/login']);
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string) {
@@ -97,7 +83,7 @@ export class AppComponent {
 
     <mat-dialog-actions align="center">
       <button
-        (click)="onCloseDialog()"
+        (click)="dialog.closeAll()"
         mat-button
         mat-dialog-close
         color="primary"
@@ -119,18 +105,12 @@ class DialogComponent {
   constructor(
     public dialog: MatDialog,
     private authService: AuthService,
-    private router: Router,
-    private toastr: ToastrService
+    private router: Router
   ) {}
-
-  onCloseDialog() {
-    this.dialog.closeAll();
-  }
 
   onClickLogOut() {
     this.authService.clearToken();
-    this.router.navigate(['/login']);
-    this.toastr.success('Please Enter again for logging', 'Logout Success');
     this.dialog.closeAll();
+    this.router.navigate(['/login']);
   }
 }

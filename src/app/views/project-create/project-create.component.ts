@@ -126,6 +126,7 @@ export class ProjectCreateComponent {
       event.target.value = null;
     } else {
       this.file.map((f, i) => {
+        // size > 102,400 KiloBytes == 10 MegaBytes
         if (f.size > 100 * 1024) {
           this.file_name = '';
           this._toastr.warning('ขนาดไฟล์ของไฟล์ต้องไม่เกิน 100 KB');

@@ -10,7 +10,6 @@
 
   <!-- Forms Manage Project -->
   <table mat-table cellspacing="0" class="mx-auto">
-    <caption>เพิ่มโครงการและรายการกิจกรรมต่างๆ</caption>
     <tr>
       <td>
         <mat-form-field appearance="fill">
@@ -132,7 +131,7 @@
     <!-- สร้างโครงสร้างของกิจกรรมที่ซ้อน #nested เป็น template สำหรับ กิจกรรมหลัก และกิจกรรมย่อย -->
     <ng-template #nestedActivities let-activities let-level="level">
       <ng-container *ngFor="let sub of activities; let index = index; trackBy: trackByFn">
-        <tr>
+        <tr *ngIf="sub.isDelete != true">
           @if (level == 1 && index == 0) {
           <!-- Main Activity -->
           <td>

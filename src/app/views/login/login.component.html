@@ -8,16 +8,24 @@
 
       <mat-form-field>
         <mat-label>Enter your username</mat-label>
-        <input [(ngModel)]="loginForm.username" name="username" matInput placeholder="admin" required>
+        <input [(ngModel)]="loginForm.username" #username="ngModel" name="username" matInput placeholder="admin"
+          required>
+        @if(username.errors?.['required']) {
+        <mat-error>Username is <strong>required</strong></mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Enter your password</mat-label>
-        <input [(ngModel)]="loginForm.password" name="password" matInput [type]="hide ? 'password' : 'text'" required>
+        <input [(ngModel)]="loginForm.password" #password="ngModel" name="password" matInput
+          [type]="hide ? 'password' : 'text'" required>
         <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
           [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
+        @if(password.errors?.['required']) {
+        <mat-error>Password is <strong>required</strong></mat-error>
+        }
       </mat-form-field>
 
       <mat-card-actions align="end">

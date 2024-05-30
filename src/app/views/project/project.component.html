@@ -6,7 +6,7 @@
 </header>
 
 <!-- Add Product -->
-<div class="text-center mx-3 text-sm">
+<div *ngIf="role == 'admin'" class="text-center mx-3 text-sm">
   <button mat-flat-button color="primary" (click)="openDialogCreate()">
     <span class="flex items-center justify-center">
       <mat-icon>
@@ -30,7 +30,7 @@
         <th class="px-2 py-1">Name</th>
         <th class="px-2 py-1">Start</th>
         <th class="px-2 py-1">End</th>
-        <th class="px-2 py-1">Action</th>
+        <th *ngIf="role == 'admin'" class="px-2 py-1">Action</th>
 
       </tr>
     </thead>
@@ -41,7 +41,7 @@
         <td class="px-2 py-1">{{ project.name}}</td>
         <td class="px-2 py-1">{{ project.startDate}}</td>
         <td class="px-2 py-1">{{ project.endDate}}</td>
-        <td>
+        <td *ngIf="role == 'admin'">
           <button type="button" mat-icon-button [routerLink]="['/manage',project.id]">
             <mat-icon style="color: orange;">list_alt_add</mat-icon>
           </button>
