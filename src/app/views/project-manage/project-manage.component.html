@@ -55,9 +55,9 @@
       </td>
     </tr>
 
-    @if(this.file.length > 0) {
+    @if(file_list.length > 0) {
     <strong>Files to Upload</strong>
-    <tr *ngFor="let f of file, let i = index">
+    <tr *ngFor="let f of file_list, let i = index">
       <td colspan="2">
         <mat-list>
           <mat-list-item>
@@ -79,7 +79,8 @@
             {{i + 1}}.
             &nbsp;
             <a [href]="'http://localhost:8000/api/File/download/'+ f.id " target="_blank" download
-              class="text-blue-400 hover:text-blue-700">{{f.fileName}}</a>
+              class="text-blue-400 hover:text-blue-700">{{f.fileName}}
+            </a>
             &nbsp;
             <button type="button" (click)="onIsDelete(f.id)" mat-button
               color="warn"><mat-icon>delete</mat-icon></button>
@@ -93,28 +94,18 @@
 
     <tr>
       <td colspan="2">
-        <mat-form-field appearance="fill">
-          <mat-label>Add Activity</mat-label>
-          <input matInput [(ngModel)]="newActivityName" name="newActivity" placeholder="Main Activity">
-        </mat-form-field>
+        <!-- ฺButton Add -->
+        <button type="button" mat-button (click)="addActivity()" color="primary">
+          <mat-icon>add_circle</mat-icon>เพิ่มกิจกรรม
+        </button>
 
-        <!-- ฺ(Button) Add / Done -->
-        @if(!newActivityName) {
-        <button type="button" mat-icon-button (click)="toggleNewActivityField()" color="primary">
-          <mat-icon>add_circle</mat-icon>
-        </button>
-        } @else {
-        <button type="button" mat-icon-button (click)="addActivity()" style="color: green;">
-          <mat-icon>check_circle</mat-icon>
-        </button>
-        }
       </td>
     </tr>
   </table>
 
   <!-- Table Activities -->
   @if (project.activities && project.activities.length > 0) {
-  <h3 class="text-center mt-3">รายการกิจกรรม</h3>
+  <h3 class="text-center mt-3"><strong>รายการกิจกรรม</strong></h3>
 
   <table mat-table cellspacing="0" class="mx-auto">
     <!-- Angular Template Outlet เพื่อแสดงกิจกรรมหลัก โดยส่ง project.activities และระดับ (level) เริ่มต้นเป็น 1 -->
@@ -127,19 +118,18 @@
         <tr *ngIf="sub.isDelete != true">
           @if (level == 1 && index == 0) {
           <!-- Main Activity -->
-          <td>
+          <td class="td">
             <mat-form-field>
-              <input matInput [(ngModel)]="sub.name" name="mainActivity" placeholder="Main Activity">
+              <input matInput [(ngModel)]="sub.name" [ngModelOptions]="{standalone: true}">
             </mat-form-field>
           </td>
           } @else {
           <!-- เติมช่องว่างสำหรับกิจกรรมย่อย -->
-          <td *ngFor="let i of [].constructor(level - 1)"></td>
+          <td *ngFor="let i of [].constructor(level - 1)" class="td"></td>
           <!-- Sub Activity -->
-          <td>
-            <!-- index:{{index}}, level:{{level}} -->
+          <td class="td">
             <mat-form-field>
-              <input matInput [(ngModel)]="sub.name" name="{{sub.name}}" placeholder="Sub Activity">
+              <input matInput [(ngModel)]="sub.name" [ngModelOptions]="{standalone: true}">
             </mat-form-field>
           </td>
           }
@@ -147,10 +137,10 @@
           <!-- Button Remove / Add Activity -->
           <td>
             <button type="button" mat-icon-button color="warn" (click)="removeSubActivity(sub)">
-              <mat-icon>remove</mat-icon>
+              <mat-icon>cancel</mat-icon>
             </button>
             <button type="button" mat-icon-button color="primary" (click)="addSubActivity(sub)">
-              <mat-icon>add</mat-icon>
+              <mat-icon>add_circle</mat-icon>
             </button>
           </td>
         </tr>
