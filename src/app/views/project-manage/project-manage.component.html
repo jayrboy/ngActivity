@@ -50,7 +50,7 @@
             (click)="f_input.click()"><mat-icon>attach_file</mat-icon></button>
           <input readonly matInput #name="ngModel" [(ngModel)]="file_name" name="file" placeholder="Files or Project">
           <input type="file" multiple #f_input hidden (change)="uploading($event)" />
-          <mat-hint align="end">files {{this.file.length}}/5</mat-hint>
+          <mat-hint align="end">files {{this.file_list.length}}/5</mat-hint>
         </mat-form-field>
       </td>
     </tr>
@@ -62,6 +62,11 @@
         <mat-list>
           <mat-list-item>
             {{i + 1}}.&nbsp;{{f.name}}
+            &nbsp;
+            <button type="button" (click)="onRemove(i)" mat-button color="warn">
+              <!-- <mat-icon>remove</mat-icon> -->
+              remove
+            </button>
           </mat-list-item>
           <mat-divider></mat-divider>
         </mat-list>
@@ -69,26 +74,29 @@
     </tr>
     }
 
-    @if(showFiles.length > 0) {
+    @if(project.file.length > 0) {
     <br>
     <strong>Click to Download File</strong>
-    <tr *ngFor="let f of showFiles, let i = index">
-      <td colspan="2">
-        <mat-list>
-          <mat-list-item>
-            {{i + 1}}.
-            &nbsp;
-            <a [href]="'http://localhost:8000/api/File/download/'+ f.id " target="_blank" download
-              class="text-blue-400 hover:text-blue-700">{{f.fileName}}
-            </a>
-            &nbsp;
-            <button type="button" (click)="onIsDelete(f.id)" mat-button
-              color="warn"><mat-icon>delete</mat-icon></button>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-        </mat-list>
-      </td>
-    </tr>
+    <ng-container *ngFor="let f of project.file, let i = index">
+      <tr *ngIf="f.isDelete != true">
+        <td colspan="2">
+          <mat-list>
+            <mat-list-item>
+              {{i + 1}}.
+              &nbsp;
+              <a [href]="'http://localhost:8000/api/File/download/'+ f.id " target="_blank" download
+                class="text-blue-400 hover:text-blue-700">{{f.fileName}}
+              </a>
+              &nbsp;
+              <button type="button" (click)="onIsDelete(f)" mat-button color="warn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </mat-list>
+        </td>
+      </tr>
+    </ng-container>
     }
 
 

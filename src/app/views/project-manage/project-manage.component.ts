@@ -39,7 +39,6 @@ export class ProjectManageComponent {
   file: File[] = []; // Change to an array to store multiple files
   file_name: string = '';
 
-  showFiles: FileModel[] = [];
   file_list: File[] = [];
 
   @ViewChild('projectForm') form!: NgForm;
@@ -56,7 +55,6 @@ export class ProjectManageComponent {
         // console.log(result.data);
 
         this.project = result.data;
-        this.showFiles = result.data.file;
       },
       (error) => {
         this._toastr.error(error);
@@ -116,6 +114,7 @@ export class ProjectManageComponent {
   //TODO:
   uploading(event: any): void {
     let files: FileList = event.target.files; // Get the file list
+
     this.file = Array.from(files); // Convert FileList to an array
 
     this.file.forEach((f) => {
@@ -152,7 +151,6 @@ export class ProjectManageComponent {
       this._projectService.putFormData(this.project, this.file_list).subscribe(
         (result: Response) => {
           // console.log(result.data);
-
           this._router.navigate(['/']).then(() => {
             this._router.navigate(['/project/manage', this.projectId]);
             this._toastr.success('อัปเดตข้อมูลสำเร็จ');
@@ -165,25 +163,19 @@ export class ProjectManageComponent {
     }
   }
 
-  onIsDelete(id: number) {
+  onIsDelete(file: FileModel) {
+    // console.log(file);
     const confirmDelete = confirm('ยืนยันลบรายการนี้?');
-
     if (confirmDelete) {
-      this._projectService.deleteFile(id).subscribe(
-        (result) => {
-          // console.log(result);
-
-          this._toastr.success('ลบข้อมูล สำเร็จ');
-          window.location.reload();
-        },
-        (error) => {
-          this._toastr.error(error.message);
-        }
-      );
+      file.isDelete = true;
     }
   }
 
   trackByFn(index: number, item: any): any {
     return item.id || index; // แต่ละกิจกรรมมี id ที่ไม่ซ้ำกัน
+  }
+
+  onRemove(index: number) {
+    this.file_list.splice(index, 1);
   }
 }

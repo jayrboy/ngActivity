@@ -1,5 +1,6 @@
 import Activity from './activity.model';
 import ProjectFile from './project-file.model';
+import FileModel from './file.model';
 
 export default class Project {
   id: number = 0;
@@ -11,5 +12,5 @@ export default class Project {
   isDelete: boolean = false;
   activities: Activity[] = [];
   // projectFile: ProjectFile[] = []; // .NET Core [JsonIgnore]
-  file: File[] = [];
+  file: FileModel[] = [];
 }
