@@ -6,10 +6,7 @@ import Project from '../../models/project.model';
 import Response from '../../models/response.model';
 import { ProjectService } from './../../services/project.service';
 
-import { MatDialog } from '@angular/material/dialog';
-
 import { ToastrService } from 'ngx-toastr';
-import { ProjectCreateComponent } from '../project-create/project-create.component';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -26,8 +23,7 @@ export class ProjectComponent {
 
   constructor(
     private projectService: ProjectService,
-    private toastr: ToastrService,
-    public dialog: MatDialog
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -40,15 +36,16 @@ export class ProjectComponent {
     );
   }
 
-  openDialogCreate() {
-    const dialogRef = this.dialog.open(ProjectCreateComponent);
+  //? Use with: "public dialog: MatDialog" in constructor(...)
+  // openDialogCreate() {
+  //   const dialogRef = this.dialog.open(ProjectCreateComponent);
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
-  }
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     console.log('The dialog was closed');
+  //   });
+  // }
 
-  onClickProject(projectId: number) {
+  onClickDelete(projectId: number) {
     const confirmDelete = confirm('ยืนยันลบรายการนี้?');
     if (confirmDelete) {
       this.projectService.delete(projectId).subscribe(

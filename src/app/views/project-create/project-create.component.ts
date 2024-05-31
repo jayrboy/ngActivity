@@ -1,13 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
-import {
-  MatDialogRef,
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogActions,
-  MatDialogClose,
-  MAT_DIALOG_DATA,
-  MatDialog,
-} from '@angular/material/dialog';
+import { Component, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +12,7 @@ import Activity from './../../models/activity.model';
 
 import { ToastrService } from 'ngx-toastr';
 import Response from '../../models/response.model';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 
 @Component({
@@ -32,13 +23,10 @@ import { MatListModule } from '@angular/material/list';
     MatInputModule,
     FormsModule,
     MatButtonModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
     MatIconModule,
     CommonModule,
     MatListModule,
+    RouterModule,
   ],
   templateUrl: './project-create.component.html',
   styleUrl: './project-create.component.css',
@@ -56,59 +44,49 @@ export class ProjectCreateComponent {
   @ViewChild('projectForm') form!: NgForm;
 
   constructor(
-    public dialogRef: MatDialogRef<ProjectCreateComponent>,
     private _projectService: ProjectService,
     private _toastr: ToastrService,
-    private _router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: Project
+    private _router: Router
   ) {}
 
-  toggleNewActivityField() {
-    this.newActivityName = this.newActivityName ? '' : this.newActivityName;
-  }
-
   addActivity() {
-    if (this.newActivityName.trim() !== '') {
-      const newActivity: Activity = {
-        id: 0,
-        projectId: 0,
-        activityHeaderId: 0,
-        name: this.newActivityName,
-        createDate: new Date().toISOString(),
-        updateDate: new Date().toISOString(),
-        isDelete: false,
-        activityHeader: null,
-        inverseActivityHeader: [],
-        project: new Project(),
-      };
+    const newActivity: Activity = {
+      id: 0,
+      projectId: 0,
+      activityHeaderId: 0,
+      name: this.newActivityName,
+      createDate: new Date().toISOString(),
+      updateDate: new Date().toISOString(),
+      isDelete: false,
+      activityHeader: null,
+      inverseActivityHeader: [],
+      project: new Project(),
+    };
 
-      this.project.activities.push(newActivity);
-      this.newActivityName = '';
-    }
+    this.project.activities.push(newActivity);
+    this.newActivityName = '';
   }
 
   addSubActivity(activity: Activity) {
-    if (this.newActivityName.trim() !== '') {
-      const subActivity: Activity = {
-        id: 0,
-        projectId: activity.projectId,
-        activityHeaderId: activity.id,
-        name: this.newActivityName,
-        createDate: new Date().toISOString(),
-        updateDate: new Date().toISOString(),
-        isDelete: false,
-        activityHeader: null,
-        inverseActivityHeader: [],
-        project: new Project(),
-      };
+    const subActivity: Activity = {
+      id: 0,
+      projectId: activity.projectId,
+      activityHeaderId: activity.id,
+      name: this.newActivityName,
+      createDate: new Date().toISOString(),
+      updateDate: new Date().toISOString(),
+      isDelete: false,
+      activityHeader: null,
+      inverseActivityHeader: [],
+      project: new Project(),
+    };
 
-      if (!activity.inverseActivityHeader) {
-        activity.inverseActivityHeader = [];
-      }
-
-      activity.inverseActivityHeader.push(subActivity);
-      this.newActivityName = '';
+    if (!activity.inverseActivityHeader) {
+      activity.inverseActivityHeader = [];
     }
+
+    activity.inverseActivityHeader.push(subActivity);
+    this.newActivityName = '';
   }
 
   removeSubActivity(activity: Activity[], index: number) {
@@ -158,7 +136,6 @@ export class ProjectCreateComponent {
           this._router.navigate(['/']).then(() =>
             this._router.navigate(['/project']).then(() => {
               this._toastr.success('เพิ่มข้อมูลสำเร็จ');
-              this.dialogRef.close();
             })
           );
         },

@@ -7,7 +7,7 @@
 
 <!-- Add Product -->
 <div *ngIf="role == 'admin'" class="text-center mx-3 text-sm">
-  <button mat-flat-button color="primary" (click)="openDialogCreate()">
+  <button type="button" [routerLink]="['/project/create']" mat-flat-button color="primary">
     <span class="flex items-center justify-center">
       <mat-icon>
         <span class="material-symbols-outlined">
@@ -42,11 +42,12 @@
         <td class="px-2 py-1">{{ project.startDate}}</td>
         <td class="px-2 py-1">{{ project.endDate}}</td>
         <td *ngIf="role == 'admin'">
-          <button type="button" mat-icon-button [routerLink]="['/manage',project.id]">
+          <button type="button" mat-icon-button [routerLink]="['/project/manage',project.id]">
             <mat-icon style="color: orange;">list_alt_add</mat-icon>
           </button>
           <button type="button" mat-icon-button color="warn"
-            (click)="onClickProject(project.id)"><mat-icon>delete</mat-icon></button>
+            (click)="onClickDelete(project.id)"><mat-icon>delete</mat-icon>
+          </button>
         </td>
       </tr>
       }
