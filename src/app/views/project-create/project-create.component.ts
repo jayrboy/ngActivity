@@ -143,4 +143,8 @@ export class ProjectCreateComponent {
       );
     }
   }
+
+  onRemove(index: number) {
+    this.file_list.splice(index, 1);
+  }
 }

@@ -60,6 +60,11 @@
         <mat-list>
           <mat-list-item>
             {{i + 1}}.&nbsp;{{f.name}}
+            &nbsp;
+            <button type="button" (click)="onRemove(i)" mat-button color="warn">
+              <!-- <mat-icon>remove</mat-icon> -->
+              remove
+            </button>
           </mat-list-item>
           <mat-divider></mat-divider>
         </mat-list>
