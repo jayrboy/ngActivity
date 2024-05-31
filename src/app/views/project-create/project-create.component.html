@@ -47,10 +47,24 @@
               (click)="f_input.click()"><mat-icon>attach_file</mat-icon></button>
             <input readonly matInput [(ngModel)]="file_name" name="file" placeholder="Files or Project">
             <input type="file" multiple #f_input hidden (change)="uploading($event)" />
-            <mat-hint align="end">files {{this.file.length}}/5</mat-hint>
+            <mat-hint align="end">files {{file_list.length}}/5</mat-hint>
           </mat-form-field>
         </td>
       </tr>
+
+      @if(file_list.length > 0) {
+      <strong>Files to Upload</strong>
+      <tr *ngFor="let f of file_list, let i = index">
+        <td colspan="2">
+          <mat-list>
+            <mat-list-item>
+              {{i + 1}}.&nbsp;{{f.name}}
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </mat-list>
+        </td>
+      </tr>
+      }
 
       <tr>
         <td colspan="2">

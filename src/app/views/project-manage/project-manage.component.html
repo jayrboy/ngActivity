@@ -11,19 +11,13 @@
   <!-- Forms Manage Project -->
   <table mat-table cellspacing="0" class="mx-auto">
     <tr>
-      <td>
-        <mat-form-field appearance="fill">
+      <td colspan="2">
+        <mat-form-field appearance="fill" class="w-full">
           <mat-label>Project Name</mat-label>
           <input matInput [(ngModel)]="project.name" #name="ngModel" name="name" placeholder="Name" required>
           @if (name.errors?.['required']) {
           <mat-error>Project Name is <strong>required</strong></mat-error>
           }
-        </mat-form-field>
-      </td>
-      <td>
-        <mat-form-field>
-          <mat-label>Company ID</mat-label>
-          <input matInput disabled value={{project.id}}>
         </mat-form-field>
       </td>
     </tr>
