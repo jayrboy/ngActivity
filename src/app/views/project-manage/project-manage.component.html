@@ -50,18 +50,64 @@
             (click)="f_input.click()"><mat-icon>attach_file</mat-icon></button>
           <input readonly matInput #name="ngModel" [(ngModel)]="file_name" name="file" placeholder="Files or Project">
           <input type="file" multiple #f_input hidden (change)="uploading($event)" />
-          <mat-hint align="end">files {{this.file_list.length}}/5</mat-hint>
+          <mat-hint align="end">files {{project.file.length + file_list.length}}/5</mat-hint>
         </mat-form-field>
       </td>
     </tr>
 
+    @if(project.file.length > 0) {
+    <br>
+    <strong>Click to Download File</strong>
+    <tr *ngFor="let f of project.file, let i = index">
+      <td colspan="2">
+        @if (f.isDelete == false) {
+        <mat-list>
+          <mat-list-item>
+            {{i + 1}}.
+            &nbsp;
+            <a [href]="'http://localhost:8000/api/File/download/'+ f.id " target="_blank" download
+              class="text-blue-400 hover:text-blue-700">{{f.fileName}}
+            </a>
+            &nbsp;
+            <button type="button" (click)="onIsDelete(f)" mat-button color="warn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </mat-list>
+        } @else {
+        <mat-list>
+          <mat-list-item>
+            <span class="text-red-500">Remove</span> : {{i + 1}}.
+            &nbsp;
+            <a [href]="'http://localhost:8000/api/File/download/'+ f.id " target="_blank" download
+              class="text-blue-400 hover:text-blue-700">{{f.fileName}}
+            </a>
+            &nbsp;
+            <button type="button" (click)="f.isDelete = false" mat-button style="color: orange;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z" />
+                <path
+                  d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466" />
+              </svg>
+            </button>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </mat-list>
+        }
+      </td>
+    </tr>
+    }
+
+    <!-- Files List -->
     @if(file_list.length > 0) {
-    <strong>Files to Upload</strong>
     <tr *ngFor="let f of file_list, let i = index">
       <td colspan="2">
         <mat-list>
           <mat-list-item>
-            {{i + 1}}.&nbsp;{{f.name}}
+            {{project.file.length + i + 1}}.&nbsp; <a [href]="" target="_blank" download
+              class="text-blue-400 hover:text-blue-700">{{f.name}}</a>
             &nbsp;
             <button type="button" (click)="onRemove(i)" mat-button color="warn">
               <!-- <mat-icon>remove</mat-icon> -->
@@ -74,48 +120,22 @@
     </tr>
     }
 
-    @if(project.file.length > 0) {
-    <br>
-    <strong>Click to Download File</strong>
-    <ng-container *ngFor="let f of project.file, let i = index">
-      <tr *ngIf="f.isDelete != true">
-        <td colspan="2">
-          <mat-list>
-            <mat-list-item>
-              {{i + 1}}.
-              &nbsp;
-              <a [href]="'http://localhost:8000/api/File/download/'+ f.id " target="_blank" download
-                class="text-blue-400 hover:text-blue-700">{{f.fileName}}
-              </a>
-              &nbsp;
-              <button type="button" (click)="onIsDelete(f)" mat-button color="warn">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </mat-list-item>
-            <mat-divider></mat-divider>
-          </mat-list>
-        </td>
-      </tr>
-    </ng-container>
-    }
-
-
     <tr>
       <td colspan="2">
         <!-- ฺButton Add -->
         <button type="button" mat-button (click)="addActivity()" color="primary">
           <mat-icon>add_circle</mat-icon>เพิ่มกิจกรรม
         </button>
-
       </td>
     </tr>
+
   </table>
 
   <!-- Table Activities -->
   @if (project.activities && project.activities.length > 0) {
   <h3 class="text-center mt-3"><strong>รายการกิจกรรม</strong></h3>
-
   <table mat-table cellspacing="0" class="mx-auto">
+
     <!-- Angular Template Outlet เพื่อแสดงกิจกรรมหลัก โดยส่ง project.activities และระดับ (level) เริ่มต้นเป็น 1 -->
     <ng-container *ngTemplateOutlet="nestedActivities; context: { $implicit: project.activities, level: 1 }">
     </ng-container>
@@ -128,7 +148,11 @@
           <!-- Main Activity -->
           <td class="td">
             <mat-form-field>
-              <input matInput [(ngModel)]="sub.name" [ngModelOptions]="{standalone: true}">
+              <input type="text" matInput [(ngModel)]="activities[index].name" #name="ngModel"
+                [ngModelOptions]="{standalone: true}" required>
+              @if (name.errors?.['required']) {
+              <mat-error>Activity Name is <strong>required</strong></mat-error>
+              }
             </mat-form-field>
           </td>
           } @else {
@@ -137,7 +161,11 @@
           <!-- Sub Activity -->
           <td class="td">
             <mat-form-field>
-              <input matInput [(ngModel)]="sub.name" [ngModelOptions]="{standalone: true}">
+              <input type="text" matInput [(ngModel)]="sub.name" #name="ngModel" [ngModelOptions]="{standalone: true}"
+                required>
+              @if (name.errors?.['required']) {
+              <mat-error>Activity Name is <strong>required</strong></mat-error>
+              }
             </mat-form-field>
           </td>
           }
@@ -161,17 +189,17 @@
         }
       </ng-container>
     </ng-template>
+
   </table>
   }
-
-
 
   <!-- Cancel / Submit Buttons -->
   <div class="flex justify-center mt-4 mb-5">
     <button mat-button type="button" [routerLink]="['/project']">Back</button>
     &nbsp;
-    <button mat-flat-button type="submit" color="primary" cdkFocusInitial>Submit</button>
+    <button mat-flat-button type="submit" color="primary">Submit</button>
   </div>
+
 </form>
 
 <br>

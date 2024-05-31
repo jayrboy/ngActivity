@@ -114,33 +114,40 @@ export class ProjectManageComponent {
   //TODO:
   uploading(event: any): void {
     let files: FileList = event.target.files; // Get the file list
+    const maxSize: number = 100; // สมมุติ ต้องการจำกัดไฟล์ขนาดไฟล์ไม่เกิน 100 KB
+    const maxFiles: number = 5; // จำกัดจำนวนไฟล์ไม่เกิน 5 ไฟล์
 
-    this.file = Array.from(files); // Convert FileList to an array
-
-    this.file.forEach((f) => {
-      // 1024 KiloBytes == 1 MegaBytes
-      if (f.size > 100 * 1024) {
-        event.target.value = null;
-        this.file_list = [];
-        this.file_name = '';
-        this._toastr.warning('ขนาดไฟล์ของไฟล์ต้องไม่เกิน 100 MB');
-      } else {
-        this.file_list.push(f);
-      }
-    });
-
-    if (files.length > 5) {
-      this._toastr.warning('กรุณาเพิ่มไฟล์ได้ไม่เกินครั้งละ 5 ไฟล์');
-      this.file_name = '';
-      this.file_list = [];
-      event.target.value = null;
-    } else if (this.file_list.length > 5) {
-      event.target.value = null;
-      this.file_list = [];
-      this._toastr.warning('กรุณาเพิ่มไฟล์ได้ไม่เกิน 5 ไฟล์');
-    } else if (files.length > 0) {
-      this.file_name = files[0].name; // Show name of the first file as an example
+    // ตรวจสอบจำนวนไฟล์รวมที่อัปโหลดว่ามากกว่า maxFiles หรือไม่
+    if (
+      this.project.file.length + this.file_list.length + files.length >
+      maxFiles
+    ) {
+      this._toastr.warning('เพิ่มไฟล์ได้ไม่เกิน 5 ไฟล์');
+      return;
     }
+
+    // ตรวจสอบขนาดของแต่ละไฟล์ที่อัปโหลด
+    for (let i = 0; i <= files.length - 1; i++) {
+      if (files[i].size > maxSize * 1024) {
+        this._toastr.warning(`ขนาดของไฟล์ต้องไม่เกิน ${maxSize} KB`);
+        return;
+      }
+    }
+
+    // เพิ่มไฟล์ที่ผ่านการตรวจสอบแล้วเข้ามาใน list
+    for (let i = 0; i <= files.length - 1; i++) {
+      this.file_list.push(files[i]);
+    }
+
+    // อัปเดตชื่อไฟล์ใน input
+    if (files.length > 0) {
+      this.file_name = Array.from(files)
+        .map((file) => file.name)
+        .join(', ');
+    }
+
+    // รีเซ็ต input value เพื่อให้สามารถเลือกไฟล์ซ้ำได้
+    event.target.value = '';
   }
 
   onSubmit() {
@@ -150,7 +157,6 @@ export class ProjectManageComponent {
     if (this.form.valid) {
       this._projectService.putFormData(this.project, this.file_list).subscribe(
         (result: Response) => {
-          // console.log(result.data);
           this._router.navigate(['/']).then(() => {
             this._router.navigate(['/project/manage', this.projectId]);
             this._toastr.success('อัปเดตข้อมูลสำเร็จ');
@@ -160,12 +166,14 @@ export class ProjectManageComponent {
           this._toastr.error(error.message);
         }
       );
+    } else {
+      this._toastr.warning('กรุณากรอกข้อมูลให้ครบถ้วน');
     }
   }
 
   onIsDelete(file: FileModel) {
     // console.log(file);
-    const confirmDelete = confirm('ยืนยันลบรายการนี้?');
+    const confirmDelete = confirm('ยืนยันลบไฟล์ที่มีอยู่นี้?');
     if (confirmDelete) {
       file.isDelete = true;
     }
@@ -177,5 +185,9 @@ export class ProjectManageComponent {
 
   onRemove(index: number) {
     this.file_list.splice(index, 1);
+  }
+
+  onChangeInputInvalid(event: any): void {
+    console.log(event);
   }
 }
